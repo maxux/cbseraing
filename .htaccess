@@ -1,0 +1,49 @@
+RewriteEngine on
+
+
+RewriteRule ^accueil$                            index.php?page=accueil [L]
+RewriteRule ^contact$                            index.php?page=contact [L]
+RewriteRule ^login$                              index.php?page=login [L]
+RewriteRule ^disconnect$                         index.php?disconnect [L]
+RewriteRule ^agenda$                             index.php?page=agenda [L]
+
+RewriteRule ^inscription$                        index.php?page=newaccount [L]
+RewriteRule ^inscription/save$                   index.php?page=newaccount&save [L]
+
+RewriteRule ^settings$                           index.php?page=settings [L]
+RewriteRule ^settings/save$                      index.php?page=settings&save [L]
+
+RewriteRule ^comite$                             index.php?page=comite [L]
+RewriteRule ^comite/([0-9]+)-(.+)/?$             index.php?page=comite&sub=$1&name=$2 [L]
+
+RewriteRule ^membre/([0-9]+)/?$                  index.php?page=comite&membre=$1 [L]
+RewriteRule ^membre/([0-9]+)/(.+)$               index.php?page=comite&membre=$1 [L]
+
+RewriteRule ^forum/?$                            index.php?page=forum [L]
+RewriteRule ^forum/([0-9]+)-(.+)?/?$             index.php?page=forum&category=$1 [L]
+RewriteRule ^forum/subject/([0-9]+)-(.+)?/?$     index.php?page=forum&subject=$1 [L]
+RewriteRule ^forum/all-read$                     index.php?page=forum&allread [L]
+RewriteRule ^forum/create$                       index.php?page=forum&create [L]
+RewriteRule ^forum/reply$                        index.php?page=forum&reply [L]
+RewriteRule ^forum/edit/([0-9]+)$                index.php?page=forum&edit&id=$1 [L]
+RewriteRule ^forum/edit$                         index.php?page=forum&edit&save [L]
+RewriteRule ^forum/hide/([0-9]+)$                index.php?page=forum&hide&id=$1 [L]
+
+RewriteRule ^folklore$                           index.php?page=folklore [L]
+RewriteRule ^folklore/bleu$                      index.php?page=folklore&sub=bleu [L]
+RewriteRule ^folklore/insignes$                  index.php?page=folklore&sub=insignes [L]
+RewriteRule ^folklore/comites$                   index.php?page=folklore&sub=comites [L]
+
+RewriteRule ^albums$                             index.php?page=albums [L]
+RewriteRule ^albums/([0-9]+)-(.+)/?$             index.php?page=albums&album=$1 [L]
+
+RewriteRule ^profile$                            index.php?page=profile [L]
+RewriteRule ^profile/picture$                    index.php?page=profile&picture [L]
+RewriteRule ^profile/password$                   index.php?page=profile&password [L]
+
+RewriteRule ^chants$                             index.php?page=chants [L]
+RewriteRule ^chants/([0-9]+)-(.+)/?$             index.php?page=chants&sub=$1&name=$2 [L]
+
+# php_value upload_max_filesize 200M
+# php_value post_max_size 201M
+# php_value max_file_uploads 100

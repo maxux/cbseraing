@@ -1,0 +1,340 @@
+@font-face {
+	font-family: Avenir-Light;
+	src: url(../fonts/Avenir-Light.ttf);
+}
+
+@font-face {
+	font-family: AvenirNext-DemiBold;
+	src: url(../fonts/AvenirNext-DemiBold.ttf);
+}
+
+body {
+	padding-top: 100px;
+	font-family: Avenir-Light, sans-serif;
+	background-color: #f6f6f6;
+}
+
+.error {
+	border: 1px solid #b94a48 !important;
+	padding: 15px;
+	margin: 15px;
+}
+
+input.error {
+	margin: 0;
+}
+
+/*
+ * Override some bootstrap values
+ */
+.navbar-brand {
+	padding: 20px 15px 0 20px;
+	margin-right: 5px;
+}
+
+.navbar-inverse .navbar-nav>li>a,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus {
+	color: #FFFFFF;
+	font-size: 18px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+	background-color: #6D2D95;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+	background-color: #006A1D;
+}
+
+.navsub {
+	margin-top: -50px;
+	float: right;
+}
+
+.navsub > li,
+.navsub-small > li {
+	float: left;
+}
+
+.navsub > li.active a,
+.navsub-small > li.active a {
+	color: #006A1D;
+}
+
+.navsub > li a:hover,
+.navsub-small > li a:hover {
+	border-bottom: solid 1px #6D2D95;
+}
+
+.row {
+	background-color: #FFFFFF;
+	padding: 25px;
+	border: solid 1px #BFBFBF;
+	margin-bottom: 25px;
+}
+
+h1 {
+	font-size: 30px;
+	color: #000000;
+}
+
+h2 {
+	height: 60px;
+	background-color: #6D2D95;
+	color: #FFFFFF;
+	text-align: center;
+	line-height: 60px;
+	margin: -25px -25px 30px -25px;
+	font-size: 22px;
+	font-family: AvenirNext-DemiBold;
+}
+
+h2 a:link,
+h2 a:hover,
+h2 a:active,
+h2 a:visited {
+	color: #FFFFFF;
+}
+
+
+h3 {
+	color: #000000;
+	font-family: AvenirNext-DemiBold;
+	margin-top: 0;
+}
+
+h3.block {
+	color: #006A1D;
+	margin-top: 15px;
+}
+
+h4 {
+	font-family: AvenirNext-DemiBold;
+	font-size: 22px;
+}
+
+table thead {
+	font-weight: bold;
+}
+
+.green {
+	color: #006A1D;
+}
+
+/*
+ * Custom fields
+ */
+span.username {
+	margin-right: 45px;
+}
+
+.thumbpix {
+	height: 42px;
+	width: 42px;
+	overflow: hidden;
+	margin-top: -42px;
+	margin-left: -35px;
+	position: relative;
+	top: 10px;
+	left: 100%;
+}
+
+.thumbpix img {
+	position: relative;
+	left: 50%;
+	height: 84px;
+	-webkit-transform: translate(-50%,-20%);
+	transform: translate(-50%,-20%);
+}
+
+.footer {
+	border-top: solid 1px #D2D2D2;
+	margin: 100px 0 80px 0;
+	padding-top: 15px;
+	font-size: 15px;
+}
+
+div.error {
+	color: #000000;
+}
+
+/*
+ * Forum
+ */
+.forow {
+	transition: 1s;
+}
+
+.forow:hover {
+	background-color: #C7E5C7;
+}
+
+.row.active {
+	border-left: solid 10px #006A1D;
+	margin: 0 0 8px 0;
+	padding: 10px 5px 10px 15px;
+}
+
+.row.inactive {
+	border-left: solid 10px #6D2D95;
+	margin: 0 0 8px 0;
+	padding: 10px 5px 10px 15px;
+}
+
+.forum h4 {
+	color: #000000;
+	margin: 0;
+	font-size: 16px;
+}
+
+.forum small {
+	color: #888888;
+}
+
+.forum:hover {
+	text-decoration: none;
+}
+
+.forum img {
+	width: 100%;
+}
+
+div.stars {
+	margin-top: 15px;
+	font-size: 30px;
+}
+
+div.stars > span {
+	padding: 0 2px 0 2px;
+	display: inline-block;
+	width: 1.2em;
+	height: 1.2em;
+	background-image: url(../images/stars.png);
+	background-size: 3.6em 1.2em;
+}
+
+div.stars > .doree {
+	background-position: 1.2em 0;
+}
+
+div.stars > .argent {
+	background-position: 2.4em 0;
+}
+
+div.stars > .erasmus {
+	background-position: 0 0;
+}
+
+div.stars > .fossile-doree {
+	background-position: 1.2em 0;
+	background-color: #000000;
+}
+
+div.stars > .fossile-argent {
+	background-position: 2.4em 0;
+	background-color: #000000;
+}
+
+div.stars > .bougeois {
+	background-position: 0.8em 0;
+	width: 0.8em;
+	height: 0.8em;
+	background-size: 2.4em 0.8em;
+}
+
+
+span.separator {
+	padding-right: 20px;
+}
+
+span.unread {
+	display: block;
+	position: absolute;
+	right: 6px;
+	top: 25px;
+	background-color: red;
+	font-size: 15px;
+}
+
+/*
+ * 
+ */
+#couleurs h3 {
+	margin-top: 20px;
+}
+
+#couleurs table {
+	margin: 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#couleurs thead {
+	background-color: #1A1A1A;
+	color: #FFFFFF;
+	border-top: solid white 2px;
+	border-bottom: solid white 2px;
+	font-weight: bold;
+}
+
+#couleurs td {
+	text-align: center;
+	height: 28px;
+}
+
+#couleurs .col1 { width: 60%; }
+#couleurs .col2 { width: 30%; }
+#couleurs .col3 { width: 20%; }
+#couleurs .col4 { width: 15%; }
+
+.thumbnail {
+	height: 170px;
+	overflow: hidden;
+}
+
+.thumb h4 {
+	margin-top: -10px;
+	margin-bottom: 25px;
+}
+
+/*
+ * Highlight
+ */
+li.newmessage a {
+	-moz-animation: newmsg 2s infinite;
+	-webkit-animation: newmsg 2s infinite;
+	animation: newmsg 2s infinite;
+}
+
+@-webkit-keyframes newmsg {
+	0% { color: #FFFFFF; }
+	50% { color: #6ABD6A; }
+	100% { color: #FFFFFF; }
+}
+
+@-moz-keyframes newmsg {
+	0% { color: #FFFFFF; }
+	50% { color: #6ABD6A; }
+	100% { color: #FFFFFF; }
+}
+
+@keyframes newmsg {
+	0% { color: #FFFFFF; }
+	50% { color: #6ABD6A; }
+	100% { color: #FFFFFF; }
+}
+
+/*
+ * Easter Eggs
+ */
+.bleus-forum {
+	background: url(../images/blue-pattern.jpg);
+}
+
+.bleus-forum .content-message {
+	font-family: "Comic Sans MS";
+	font-size: 18px;
+}

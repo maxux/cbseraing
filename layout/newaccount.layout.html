@@ -1,0 +1,75 @@
+{{ERRORS}}
+
+<div class="row">
+<form class="form-horizontal" role="form" method="post" action="/inscription/save">
+	<div class="form-group">
+		<label for="nomreel" class="col-sm-2 control-label">Nom réel</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="nomreel" id="nomreel"
+			data-msg-required="Ce champ est requis" data-rule-required="true">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="password" class="col-sm-2 control-label">Mot de passe</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="password" name="password"
+			data-msg-required="Ce champ est requis" data-rule-required="true">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="password" class="col-sm-2 control-label">Confirmation</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="password2" name="password2"
+			data-msg-equalto="Les mots de passe ne correspondent pas" data-rule-equalto="#password">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="email" class="col-sm-2 control-label">E-Mail</label>
+		<div class="col-sm-10">
+			<input type="email" class="form-control" id="email" name="email"
+			data-msg-required="Ce champ est requis" data-rule-required="true"
+			data-msg-email="Cette adresse email n'est pas valide">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="gsm" class="col-sm-2 control-label">Téléphone (mobile)</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="gsm" id="gsm">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary">Créer mon compte !</button>
+		</div>
+	</div>
+</form>
+</div>
+
+
+<script src="//ajax.aspnetcdn.com/ajax/jQuery.validate/1.11.1/jquery.validate.js" type="text/javascript"></script>
+<script type="text/javascript">
+$("form").validate({
+	showErrors: function(errorMap, errorList) {
+		$.each(this.validElements(), function (index, element) {
+			var $element = $(element);
+			$element.data("title", "")
+			.removeClass("error")
+			.tooltip("destroy");
+		});
+
+		// Create new tooltips for invalid elements
+		$.each(errorList, function (index, error) {
+			var $element = $(error.element);
+			$element.tooltip("destroy")
+			.data("title", error.message)
+			.addClass("error")
+			.tooltip();
+		});
+	}
+});
+</script>

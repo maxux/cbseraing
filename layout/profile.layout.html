@@ -1,0 +1,95 @@
+{{ERRORS}}
+
+<div class="row">
+	<h2>{{CUSTOM_NAME}}</h2>
+	
+	<div class="col-sm-5">
+		<img src="{{CUSTOM_PICTURE}}" alt="" style="width: 100%;" />
+		
+		<div class="text-center" style="margin-top: 50px;">
+			<p><a href="/settings" class="btn btn-primary">Modifier mon profil</a></p>
+			<p><button class="btn btn-info" data-toggle="modal" data-target="#profile">Modifier ma photo</button></p>
+			<p><button class="btn btn-info" data-toggle="modal" data-target="#password">Modifier mon mot de passe</button></p>
+		</div>
+	</div>
+	
+	<div class="col-sm-7">
+		<h4>{{CUSTOM_BAPTISE}}</h4>
+		
+		<h4>Statut:</h4>
+		{{CUSTOM_RANG}}
+		
+		<h4>Etoiles:</h4>
+		<div class="stars">{{CUSTOM_ETOILES}}</div>
+		
+		<h4>Adresse e-mail:</h4>
+		{{CUSTOM_EMAIL}}
+		
+		<h4>Actuellement:</h4>
+		{{CUSTOM_ACTUELLEMENT}}
+		
+		<h4>Titres de guindailles:</h4>
+		<p>{{CUSTOM_TITRES}}</p>
+		
+		<h4>Etudes:</h4>
+		<p>{{CUSTOM_ETUDES}}</p>
+	</div>
+</div>
+
+<div class="modal fade" id="profile">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<form action="/profile/picture" method="post" enctype="multipart/form-data">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Annuler</span>
+			</button>
+			<h4 class="modal-title">Photo de profil</h4>
+		</div>
+		<div class="modal-body">
+			<p>
+				Choisir un fichier:
+				<input type="file" name="filename" />
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+			<button type="submit" class="btn btn-primary">Mettre à jour ma photo</button>
+		</div>
+		</form>
+	</div>
+	</div>
+</div>
+
+<div class="modal fade" id="password">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<form action="/profile/password" method="post" class="form-horizontal" role="form" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Annuler</span>
+			</button>
+			<h4 class="modal-title">Mot de passe</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label for="before" class="col-sm-4 control-label">Mot de passe actuel:</label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control" name="before" id="before">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="after" class="col-sm-4 control-label">Nouveau mot de passe:</label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control" name="after" id="after">
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+			<button type="submit" class="btn btn-primary">Mettre à jour mon mot de passe</button>
+		</div>
+		</form>
+	</div>
+	</div>
+</div>

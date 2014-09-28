@@ -1,0 +1,68 @@
+{{ERRORS}}
+
+<div class="row">
+<form class="form-horizontal" role="form" method="post" action="/settings/save">
+	<div class="form-group">
+		<label for="surnom" class="col-sm-2 control-label">Surnom</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="surnom" id="surnom" value="{{CUSTOM_SURNOM}}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="nomreel" class="col-sm-2 control-label">Nom réel</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="nomreel" id="nomreel" value="{{CUSTOM_NOM_REEL}}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="actuellement" class="col-sm-2 control-label">Actuellement</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="actuellement" name="actu" value="{{CUSTOM_ACTUELLEMENT}}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="etoiles" class="col-sm-2 control-label">Etoiles</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="etoiles" name="etoiles" value="{{CUSTOM_ETOILES_PLAIN}}">
+			<div class="text-center">
+				* = dorée <span class="separator"></span>
+				+ = argenté <span class="separator"></span>
+				r = érasmus <span class="separator"></span>
+				F = fossile (dorée) <span class="separator"></span>
+				f = fossile (argenté) <span class="separator"></span>
+				b = bourgeois
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="bapteme" class="col-sm-2 control-label">Année de baptême</label>
+		<div class="col-sm-10">
+			<input type="numeric" class="form-control" id="bapteme" name="bapteme" value="{{CUSTOM_BAPTEME}}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="titres" class="col-sm-2 control-label">Titres de guindailles</label>
+		<div class="col-sm-10">
+			<textarea class="form-control" id="titres" style="height: 200px;" name="titres">{{CUSTOM_TITRES_PLAIN}}</textarea>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="etudes" class="col-sm-2 control-label">Parcours scolaire</label>
+		<div class="col-sm-10">
+			<textarea class="form-control" id="etudes" style="height: 200px;" name="etudes">{{CUSTOM_ETUDES_PLAIN}}</textarea>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary">Enregistrer</button>
+		</div>
+	</div>
+</form>
+</div>

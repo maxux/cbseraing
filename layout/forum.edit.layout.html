@@ -1,0 +1,14 @@
+<div class="row" style="margin-top: 75px;">
+	<h2>Modifier un message</h2>
+	
+	<form role="form" method="post" action="/forum/edit">
+		<input type="hidden" name="messageid" value="{{CUSTOM_MESSAGE_ID}}" />
+		
+		<div class="form-group">
+			<label for="message">Message</label>
+			<textarea class="form-control" id="message" name="message" style="height: 200px;">{{CUSTOM_MESSAGE}}</textarea>
+		</div>
+		
+		<button type="submit" class="btn btn-primary">Modifier</button>
+	</form>
+</div>
