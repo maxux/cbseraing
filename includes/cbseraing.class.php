@@ -511,6 +511,14 @@ class cbseraing {
 	}
 	
 	//
+	// check if file is an image
+	//
+	function image($filename) {
+		$finfo = new \finfo(FILEINFO_MIME);
+		return (substr($finfo->file($filename), 0, 10) == 'image/jpeg');
+	}
+	
+	//
 	// stages
 	//
 	// stage 1: - login/disconnection request checking/handling
@@ -588,6 +596,11 @@ class cbseraing {
 		// upload profile picture
 		//
 		if(isset($_GET['picture'])) {
+			if(!$this->image($_FILES['filename']['tmp_name'])) {
+				$this->layout->error_append("Format d'image invalide");
+				return;
+			}
+			
 			$input    = $_FILES['filename']['tmp_name'];
 			$content  = file_get_contents($input);
 			$checksum = md5($content);
