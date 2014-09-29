@@ -343,6 +343,8 @@ class forum {
 		$this->layout->breadcrumb_add('/forum/'.$this->root->urlstrip($category['id'], $category['nom']), $category['nom']);
 		$this->layout->breadcrumb_add(null, $subject['subject']);
 		
+		$this->layout->set('title', $subject['subject']);
+		
 		//
 		// lists messages
 		//
