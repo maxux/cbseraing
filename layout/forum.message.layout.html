@@ -1,13 +1,22 @@
 <div class="row message {{CUSTOM_STATUS}}">
 	<div class="col-sm-2 text-center">
-		<a class="forum" href="/membre/{{CUSTOM_AUTHOR_URL}}">
-			<img class="img-responsive" src="{{CUSTOM_PICTURE}}" alt=""><br />
-			<strong>{{CUSTOM_AUTHOR}}</strong>
-		</a>
-		
-		<div>
-		Posté le {{CUSTOM_DATE}}
+		<div class="hidden-xs">
+			<a class="forum" href="/membre/{{CUSTOM_AUTHOR_URL}}">
+				<img class="img-responsive" src="{{CUSTOM_PICTURE}}" alt=""><br />
+			</a>
+			
+			<div>
+				Posté par <a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a><br />
+				{{CUSTOM_DATE}}
+			</div>
 		</div>
+		
+		<div class="visible-xs" style="margin-bottom: 15px;">
+			Posté par
+			<a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a>, le {{CUSTOM_DATE}}
+		</div>
+		
+		
 		
 		<div>{{CUSTOM_EDIT}} {{CUSTOM_HIDE}}</div>
 	</div>
