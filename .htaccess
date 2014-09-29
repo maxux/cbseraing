@@ -47,3 +47,5 @@ RewriteRule ^chants/([0-9]+)-(.+)/?$             index.php?page=chants&sub=$1&na
 # php_value upload_max_filesize 200M
 # php_value post_max_size 201M
 # php_value max_file_uploads 100
+
+Options -Indexes
