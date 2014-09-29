@@ -6,9 +6,6 @@ include('cbseraing.forum.class.php');
 include('cbseraing.gallery.class.php');
 
 class cbseraing {
-	private $acl = array();
-	
-	private $picbase  = '/private/www/web6/web/images/photos/';
 	private $profile  = 'photos/profile/';
 	private $guest    = 99;
 	
@@ -491,11 +488,11 @@ class cbseraing {
 		$user = $this->userdata($_SESSION['uid']);
 		
 		//
-		// remove previous profile picture
+		// remove previous profile picture (if different)
 		//
 		$filename = $this->profile.$user['picture'];
 		
-		if(file_exists($filename))
+		if(file_exists($filename) && md5(file_get_contents($filename)) != $checksum)
 			unlink($filename);
 		
 		//
