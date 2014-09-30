@@ -690,9 +690,9 @@ class cbseraing {
 				return $this->layout->error_append("Erreur de sujet");
 			
 			// post reply
-			$this->forum->reply($_POST['subject'], $_SESSION['uid'], $_POST['message']);
+			$subject = $this->forum->reply($_POST['subject'], $_SESSION['uid'], $_POST['message']);
 			
-			header('Location: /forum/subject/'.$this->urlstrip($_POST['subject'], '#'));
+			header('Location: /forum/subject/'.$this->urlstrip($_POST['subject'], $subject['subject']));
 		}
 		
 		//

@@ -471,6 +471,12 @@ class forum {
 		
 		$req->bind_param('iis', $subject, $author, $message);
 		$this->root->sql->exec($req);
+		
+		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');
+		$mesreq->bind_param('i', $subject);
+		$message = $this->root->sql->exec($mesreq);
+		
+		return $message[0];
 	}
 	
 	//
