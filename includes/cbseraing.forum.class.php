@@ -431,6 +431,10 @@ class forum {
 		$str = preg_replace('#(\[code\])(.*?)(\[/code\])#is', '<code>\2</code>', $str);
 		$str = preg_replace('#(\[img\])(.*?)(\[/img\])#is', '<img src="\2" class="img-responsive" />', $str);
 		
+		$str = preg_replace('#(\[video\])(.*?)(\[/video\])#is',
+			'<video width="480" height="320" controls><source src="$2"></video>',
+			$str);
+		
 		// neasted quote
 		do {
 			$str = preg_replace('#(\[cite\])(((?R)|.)*?)(\[/cite\])#is',
