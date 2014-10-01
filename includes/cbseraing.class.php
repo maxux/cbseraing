@@ -327,8 +327,11 @@ class cbseraing {
 	// return 'année baptême' if set and if not 'bleu'
 	//
 	function baptise($date, $type) {
-		if($type == 0)
+		if($type == 0 && $date == 0)
 			return 'Non baptisé';
+		
+		if($type == 0)
+			return 'Non baptisé (tentative '.$date.')';
 		
 		if($date == 0)
 			return '';
