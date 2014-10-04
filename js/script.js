@@ -8,6 +8,7 @@ $(document).ready(function() {
 	});
 	$('.thumb a').tooltip();
 	
+	/*
 	tinymce.init({
 		selector: "textarea.forumtext",
 		plugins : "bbcode",
@@ -23,4 +24,5 @@ $(document).ready(function() {
 		convert_fonts_to_spans: false,
 		theme_advanced_path: false,
 	});
+	*/
 });

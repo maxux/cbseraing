@@ -24,6 +24,10 @@ input.error {
 	margin: 0;
 }
 
+a {
+	word-wrap: break-word;
+}
+
 /*
  * Override some bootstrap values
  */
