@@ -28,6 +28,10 @@ a {
 	word-wrap: break-word;
 }
 
+blockquote {
+	margin-bottom: 0;
+}
+
 /*
  * Override some bootstrap values
  */
