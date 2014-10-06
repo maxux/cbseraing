@@ -202,7 +202,7 @@ class cbseraing {
 		return (isset($_SESSION['loggedin']) && $_SESSION['loggedin']);
 	}
 	
-	function allowed($requestlevel) {
+	function allowed($requestlevel, $option = NULL) {
 		if(!$this->connected())
 			$this->user = array('type' => 99);
 			
@@ -221,6 +221,11 @@ class cbseraing {
 			case 'albums':
 				$allowed = array(1, 2, 3, 4);
 				return in_array($this->user['type'], $allowed);
+			break;
+			
+			case 'comite':
+				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true);
+				return isset($allowed[$option]);
 			break;
 		}
 	}
@@ -347,6 +352,9 @@ class cbseraing {
 	// format layout and display a user information block
 	//
 	function user($user) {
+		if(!$this->allowed('comite', $user['type']))
+			$this->layout->set('header', 'Nos amis:');
+		
 		$this->layout->custom_add('CUSTOM_MEMBER_ID', $user['id']);
 		$this->layout->custom_add('CUSTOM_MEMBER_URL', $this->urlslash($user['id'], $this->shortname($user)));
 		$this->layout->custom_add('CUSTOM_NAME', $this->username($user));
@@ -367,6 +375,11 @@ class cbseraing {
 	// list all members with a specific type
 	//
 	function comite($type, $comite = 1) {
+		if(!$this->allowed('comite', $type)) {
+			$this->layout->set('header', 'Nos amis:');
+			$comite = 0;
+		}
+		
 		$req = $this->sql->prepare('
 			SELECT *
 			FROM cbs_membres WHERE type = ? AND comite = ?
