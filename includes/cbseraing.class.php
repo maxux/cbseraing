@@ -28,6 +28,10 @@ class cbseraing {
 		'/contact'  => 'Contact',
 	);
 	
+	private $skiptypes = array(
+		5 => true
+	);
+	
 	function __construct($layout, $init = true) {
 		$this->layout = $layout;
 		$this->sql = new sql(config::$sql_serv, config::$sql_user, config::$sql_pass, config::$sql_db);
@@ -389,7 +393,7 @@ class cbseraing {
 		$req->bind_param('ii', $type, $comite);
 		$data = $this->sql->exec($req);
 		
-		if(count($data) == 0)
+		if(count($data) == 0 || isset($this->skiptypes[$type]))
 			return $this->layout->error_append('Personne pour le moment');
 		
 		foreach($data as $user)
@@ -864,8 +868,12 @@ class cbseraing {
 				// building submenu
 				//
 				$url = array();
-				foreach($types as $id => $name)
+				foreach($types as $id => $name) {
+					if(isset($this->skiptypes[$id]))
+						continue;
+					
 					$url['/comite/'.$this->urlstrip($id, $name.'s')] = $name.'s'; // s for plurial
+				}
 					
 				$list = $this->layout->items(
 					$url,
