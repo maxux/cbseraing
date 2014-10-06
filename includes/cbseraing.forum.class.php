@@ -246,16 +246,18 @@ class forum {
 		
 		
 		$req->bind_param('ii', $category, $this->type);
-		$data = $this->root->sql->exec($req);
+		$acl = $this->root->sql->exec($req);
 		
-		if(count($data) == 0)
+		if(count($acl) == 0)
 			return $this->denied();
+		
+		$acl = $acl[0];
 		
 		//
 		// breadcrumb
 		//
 		$this->layout->breadcrumb_add('/forum', 'Forum');
-		$this->layout->breadcrumb_add(null, $data[0]['nom']);
+		$this->layout->breadcrumb_add(null, $acl['nom']);
 		
 		//
 		// list subjects
@@ -297,7 +299,7 @@ class forum {
 			);
 		}
 		
-		if($this->root->connected()) {
+		if($this->root->connected() && $acl['write']) {
 			$this->layout->custom_add('CUSTOM_CATEGORY_ID', $category);
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.newpost.layout.html')
@@ -393,7 +395,7 @@ class forum {
 			);
 		}
 		
-		if($this->root->connected()) {
+		if($this->root->connected() && $subject['write']) {
 			$this->layout->custom_add('CUSTOM_SUBJECT_ID', $subject['id']);
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.reply.layout.html')
