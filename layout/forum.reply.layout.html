@@ -5,10 +5,40 @@
 		<input type="hidden" name="subject" value="{{CUSTOM_SUBJECT_ID}}" />
 		
 		<div class="form-group">
-			<label for="message">Message</label>
+			<label for="message">Message <a href="" data-toggle="modal" data-target="#balises">(voir les balises)</a></label>
 			<textarea class="form-control forumtext" id="message" name="message" style="height: 200px;"></textarea>
 		</div>
 		
 		<button type="submit" class="btn btn-primary">Répondre</button>
 	</form>
+</div>
+
+<div class="modal fade" id="balises">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span>
+			</button>
+			<h4 class="modal-title">Les balises de formatage</h4>
+		</div>
+		<div class="modal-body">
+<pre>
+[b]Gras[/b]
+[i]Italique[/i]
+[u]Souligné[/u]
+[video]URL vidéo HTML5 (mp4 ou ogv)[/video]
+[cite]Citation[/cite]
+[code]Texte pré-formaté[/code]
+[img]URL de l'image[/img]
+
+Les url sont auto-détectées
+</pre>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+		</div>
+		</form>
+	</div>
+	</div>
 </div>
