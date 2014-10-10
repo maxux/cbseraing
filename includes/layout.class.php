@@ -19,6 +19,7 @@ class LightLayout {
 	
 	private $errors = NULL;
 	private $custom = array();
+	private $pages  = array();
 	
 	function __construct() {
 		$this->render = file_get_contents('layout/'.$this->layout);
@@ -135,6 +136,7 @@ class LightLayout {
 			'{{SELECT_YEARS}}'     => implode($this->selectyears),
 			'{{SELECT_DAYS}}'      => implode($this->selectdays),
 			'{{ERRORS}}'           => $this->errors,
+			'{{PAGES}}'            => $this->pages(),
 		);
 		
 		// first pass
@@ -156,6 +158,28 @@ class LightLayout {
 	
 	function parse($array, $text) {
 		return strtr($text, $array);
+	}
+	
+	//
+	// pagination
+	//
+	function pages_add($page, $url, $active) {
+		$this->pages[] = array('text' => $page, 'url' => $url, 'active' => $active);
+	}
+	
+	function pages() {
+		$output = '<ul class="pagination">';
+		
+		$temp = array();
+		foreach($this->pages as $page)
+			$temp[] = '<li'.(($page['active']) ? ' class="active"' : '').'>'.
+			          '<a href="'.$page['url'].'">'.$page['text'].'</a>'.
+			          '</li>';
+		
+		$output .= implode($temp);
+		$output .= '</ul>';
+		
+		return $output;
 	}
 }
 ?>

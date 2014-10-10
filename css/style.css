@@ -192,6 +192,14 @@ div.error {
 	padding: 10px 5px 10px 15px;
 }
 
+.row.reminder {
+	border: solid 4px #6D2D95;
+}
+
+.reminder h3 {
+	text-align: center;
+}
+
 .forum h4 {
 	color: #000000;
 	margin: 0;

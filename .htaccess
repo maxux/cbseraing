@@ -19,9 +19,11 @@ RewriteRule ^comite/([0-9]+)-(.+)/?$             index.php?page=comite&sub=$1&na
 RewriteRule ^membre/([0-9]+)/?$                  index.php?page=comite&membre=$1 [L]
 RewriteRule ^membre/([0-9]+)/(.+)$               index.php?page=comite&membre=$1 [L]
 
-RewriteRule ^forum/?$                            index.php?page=forum [L]
-RewriteRule ^forum/([0-9]+)-(.+)?/?$             index.php?page=forum&category=$1 [L]
-RewriteRule ^forum/subject/([0-9]+)-(.+)?/?$     index.php?page=forum&subject=$1 [L]
+RewriteRule ^forum/?$                                    index.php?page=forum [L]
+RewriteRule ^forum/([0-9]+)-(.+)?/?$                     index.php?page=forum&category=$1 [L]
+RewriteRule ^forum/subject/([0-9]+)-([0-9]+)-(.+)?/?$    index.php?page=forum&subject=$1&pid=$2 [L]
+RewriteRule ^forum/subject/([0-9]+)-(.+)?/?$             index.php?page=forum&subject=$1 [L]
+
 RewriteRule ^forum/all-read$                     index.php?page=forum&allread [L]
 RewriteRule ^forum/create$                       index.php?page=forum&create [L]
 RewriteRule ^forum/reply$                        index.php?page=forum&reply [L]

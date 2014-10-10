@@ -6,6 +6,9 @@ class forum {
 	private $layout;
 	private $type;
 	
+	// posts per page
+	private $ppp = 15;
+	
 	private $parser = array(
 		'nicks' => array(),
 	);
@@ -348,6 +351,53 @@ class forum {
 		$this->layout->set('title', $subject['subject']);
 		
 		//
+		// if not the first page, reading first post as reminder
+		//
+		if($page > 1) {
+			$req = $this->root->sql->prepare('
+				SELECT msg.*, m.nomreel, m.surnom, m.picture, m.id authorid, m.type
+				FROM cbs_forum_messages msg, cbs_membres m
+				WHERE msg.subject = ?
+				  AND m.id = msg.author
+				ORDER BY created ASC
+				LIMIT 1
+			');
+			
+			$initp = (($page - 1) * $this->ppp);
+			$req->bind_param('i', $subject['id']);
+			$data = $this->root->sql->exec($req);
+			
+			$unread = NULL;
+			foreach($data as $message) {
+				$this->layout->custom_add('CUSTOM_STATUS',
+					'reminder'.(($message['type'] == 0) ? ' bleus-forum' : '')
+				);
+				
+				$this->layout->custom_add('CUSTOM_EXTRA_HEADER', 'Rappel du message original:');
+				$this->layout->custom_add('CUSTOM_ID', $message['id']);
+				$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
+				$this->layout->custom_add('CUSTOM_DATE', $message['created']);
+				$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));
+				
+				$this->layout->custom_add('CUSTOM_AUTHOR', $this->root->shortname($message));
+				$this->layout->custom_add('CUSTOM_AUTHOR_ID', $message['authorid']);
+				$this->layout->custom_add('CUSTOM_AUTHOR_URL',
+					$this->root->urlslash($message['authorid'],
+					$this->root->shortname($message))
+				);
+				
+				$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
+				$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
+				
+				$this->layout->custom_append('FORUM',
+					$this->layout->parse_file_custom(
+						'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
+					)
+				);
+			}
+		}
+		
+		//
 		// lists messages
 		//
 		$req = $this->root->sql->prepare('
@@ -356,25 +406,24 @@ class forum {
 			WHERE msg.subject = ?
 			  AND m.id = msg.author
 			ORDER BY created ASC
+			LIMIT ?, ?
 		');
 		
-		$req->bind_param('i', $subject['id']);
+		$initp = (($page - 1) * $this->ppp);
+		$req->bind_param('iii', $subject['id'], $initp, $this->ppp);
 		$data = $this->root->sql->exec($req);
 		
+		$unread = NULL;
 		foreach($data as $message) {
 			$this->layout->custom_add('CUSTOM_STATUS',
 				(isset($this->unread['messages'][$message['id']]) ? 'active' : 'inactive').
 				(($message['type'] == 0) ? ' bleus-forum' : '')
 			);
 			
-			// hidden message ?
-			if($message['hidden']) {
-				$this->layout->custom_append('FORUM',
-					$this->layout->parse_file_custom('layout/forum.message.hidden.layout.html')
-				);
-				continue;
-			}
+			if($unread == NULL && isset($this->unread['messages'][$message['id']]))
+				$unread = $message['id'];
 			
+			$this->layout->custom_add('CUSTOM_EXTRA_HEADER', '');
 			$this->layout->custom_add('CUSTOM_ID', $message['id']);
 			$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
 			$this->layout->custom_add('CUSTOM_DATE', $message['created']);
@@ -391,10 +440,33 @@ class forum {
 			$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
 			
 			$this->layout->custom_append('FORUM',
-				$this->layout->parse_file_custom('layout/forum.message.layout.html')
+				$this->layout->parse_file_custom(
+					'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
+				)
 			);
 		}
 		
+		$this->layout->custom_add('CUSTOM_ID', $unread);
+		$this->layout->preload_append($this->layout->parse_file_custom('layout/forum.scripts.goto.layout.html'));
+		
+		//
+		// pages
+		//
+		$req = $this->root->sql->prepare('SELECT COUNT(*) c FROM cbs_forum_messages msg WHERE msg.subject = ?');
+		$req->bind_param('i', $subject['id']);
+		$data = $this->root->sql->exec($req);
+		
+		$total = $data[0]['c'];
+		for($i = 0; $i < $total / $this->ppp; $i++)
+			$this->layout->pages_add(
+				$i + 1,
+				'/forum/subject/'.$subject['id'].'-'.($i + 1).'-'.$this->root->strip($subject['subject']),
+				($i + 1) == $page
+			);
+		
+		//
+		// reply form
+		//
 		if($this->root->connected() && $subject['write']) {
 			$this->layout->custom_add('CUSTOM_SUBJECT_ID', $subject['id']);
 			$this->layout->custom_add('NEWITEM',

@@ -69,8 +69,8 @@ class cbseraing {
 	function strip($url) {
 		$string = str_replace(array('?', '!', '#'), '', $url);
 		
-		$a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ ';
-		$b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr-';
+		$a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ /';
+		$b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr--';
 		
 		$string = utf8_decode($string);
 		$string = strtr($string, utf8_decode($a), $b);
@@ -824,10 +824,10 @@ class cbseraing {
 					$this->forum->subjects($_GET['category']);
 					
 				} else if(isset($_GET['subject'])) {
-					if(!isset($_GET['page']))
-						$_GET['page'] = 1;
+					if(!isset($_GET['pid']))
+						$_GET['pid'] = 1;
 						
-					$this->forum->post($_GET['subject'], $_GET['page']);
+					$this->forum->post($_GET['subject'], $_GET['pid']);
 				
 				} else if(isset($_GET['edit']) && !isset($_GET['save'])) {
 					$this->forum->edit($_GET['id']);
