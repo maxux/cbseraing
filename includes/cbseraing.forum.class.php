@@ -375,6 +375,7 @@ class forum {
 				
 				$this->layout->custom_add('CUSTOM_EXTRA_HEADER', 'Rappel du message original:');
 				$this->layout->custom_add('CUSTOM_ID', $message['id']);
+				$this->layout->custom_add('CUSTOM_PLAIN_TEXT', $message['message']);
 				$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
 				$this->layout->custom_add('CUSTOM_DATE', $message['created']);
 				$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));
@@ -425,6 +426,7 @@ class forum {
 			
 			$this->layout->custom_add('CUSTOM_EXTRA_HEADER', '');
 			$this->layout->custom_add('CUSTOM_ID', $message['id']);
+			$this->layout->custom_add('CUSTOM_PLAIN_TEXT', $message['message']);
 			$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
 			$this->layout->custom_add('CUSTOM_DATE', $message['created']);
 			$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));

@@ -26,3 +26,9 @@ $(document).ready(function() {
 	});
 	*/
 });
+
+function quote(id) {
+	$('textarea#message').html('[cite]' + $('.raw-' + id).html() + '[/cite]');
+	$('html, body').animate({scrollTop: $('textarea#message').offset().top}, 'fast');
+	return false;
+}
