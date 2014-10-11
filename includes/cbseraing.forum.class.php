@@ -467,7 +467,7 @@ class forum {
 			);
 		
 		//
-		// reply form
+		// reply form and post-read actions
 		//
 		if($this->root->connected() && $subject['write']) {
 			$this->layout->custom_add('CUSTOM_SUBJECT_ID', $subject['id']);
@@ -480,13 +480,17 @@ class forum {
 			//
 			$req = $this->root->sql->prepare('
 				INSERT INTO cbs_forum_read (uid, mid)
-				SELECT ?, m.id
-				FROM cbs_forum_messages m
-				WHERE m.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
-				  AND m.subject = ?
+				SELECT ?, id FROM (
+					SELECT author, id
+					FROM cbs_forum_messages
+					WHERE subject = ?
+					ORDER BY created ASC
+					LIMIT ?, ?
+					
+				) sub1 WHERE sub1.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
 			');
 			
-			$req->bind_param('iii', $_SESSION['uid'], $_SESSION['uid'], $subject['id']);
+			$req->bind_param('iiiii', $_SESSION['uid'], $subject['id'], $initp, $this->ppp, $_SESSION['uid']);
 			$this->root->sql->exec($req);
 			
 		} else $this->noitem();
