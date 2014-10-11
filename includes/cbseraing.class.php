@@ -4,6 +4,7 @@ include('cbseraing.config.class.php');
 include('cbseraing.sql.class.php');
 include('cbseraing.forum.class.php');
 include('cbseraing.gallery.class.php');
+include('cbseraing.ajax.class.php');
 
 class cbseraing {
 	private $profile  = 'photos/profile/';
@@ -14,8 +15,7 @@ class cbseraing {
 	
 	private $layout;
 	public $sql;
-	
-	private $forum;
+	public $forum;
 	
 	private $menu_highlight = array();
 	private $menu = array(
@@ -545,7 +545,7 @@ class cbseraing {
 	//
 	// stage 3: - parsing page and displaying requested page
 	//
-	function stage1() {
+	function stage1() {		
 		//
 		// need to check login
 		//
@@ -575,6 +575,14 @@ class cbseraing {
 		// $this->layout->custom_add('CUSTOM_UNREAD', );
 		if($this->forum->unreads() > 0)
 			$this->menu_highlight['/forum'] = 'newmessage';
+		
+		//
+		// starting ajax-request if needed
+		//
+		if(isset($_GET['ajax'])) {
+			new ajax($this);
+			die();
+		}
 		
 		//
 		// initializing menu

@@ -46,6 +46,8 @@ RewriteRule ^profile/password$                   index.php?page=profile&password
 RewriteRule ^chants$                             index.php?page=chants [L]
 RewriteRule ^chants/([0-9]+)-(.+)/?$             index.php?page=chants&sub=$1&name=$2 [L]
 
+RewriteRule ^ajax/(.+)$                          index.php?ajax=$1 [L]
+
 # php_value upload_max_filesize 200M
 # php_value post_max_size 201M
 # php_value max_file_uploads 100
