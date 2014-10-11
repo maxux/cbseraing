@@ -477,6 +477,7 @@ class forum {
 			
 			//
 			// updating read flags
+			// note: select all messages from this page and remove already-read message
 			//
 			$req = $this->root->sql->prepare('
 				INSERT INTO cbs_forum_read (uid, mid)
