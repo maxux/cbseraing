@@ -291,6 +291,11 @@ span.unread {
 	height: 28px;
 }
 
+#couleurs td div {
+	height: 100%;
+	float: left;
+}
+
 #couleurs .col1 { width: 60%; }
 #couleurs .col2 { width: 30%; }
 #couleurs .col3 { width: 20%; }

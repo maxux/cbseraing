@@ -38,6 +38,8 @@ function notifications(data) {
 	if(data.unread > 0)
 		$('a[href="/forum"]').parent().addClass('newmessage');
 	
+	else $('a[href="/forum"]').parent().removeClass('newmessage');
+	
 	setTimeout(forum, settings.notifications.delay);
 }
 
