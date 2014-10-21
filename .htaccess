@@ -6,6 +6,8 @@ RewriteRule ^contact$                            index.php?page=contact [L]
 RewriteRule ^login$                              index.php?page=login [L]
 RewriteRule ^disconnect$                         index.php?disconnect [L]
 RewriteRule ^agenda$                             index.php?page=agenda [L]
+RewriteRule ^events$                             index.php?page=events [L]
+RewriteRule ^events/toggle/([0-9]+)$             index.php?page=events&toggle=$1 [L]
 
 RewriteRule ^inscription$                        index.php?page=newaccount [L]
 RewriteRule ^inscription/save$                   index.php?page=newaccount&save [L]

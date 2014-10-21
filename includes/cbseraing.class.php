@@ -36,11 +36,7 @@ class cbseraing {
 		$this->layout = $layout;
 		$this->sql = new sql(config::$sql_serv, config::$sql_user, config::$sql_pass, config::$sql_db);
 		
-		//
-		// DEBUG -- REMOVE ME -- DEBUG
-		//
-		if(isset($_GET['migration']))
-			die($this->__migration());
+		setlocale(LC_ALL, 'fr_BE.UTF-8');
 
 		if($init)
 			session_start();
@@ -501,6 +497,85 @@ class cbseraing {
 		}
 	}
 	
+	function events() {		
+		$req = $this->sql->query('
+			SELECT *, UNIX_TIMESTAMP(date) uts FROM cbs_events
+			ORDER BY date
+		');
+		
+		while($data = $req->fetch_assoc()) {
+			$events[$data['id']]['event'] = $data;
+			$events[$data['id']]['going'] = array();
+		}
+
+		$req = $this->sql->query('
+			SELECT e.*, u.type, u.nomreel, u.surnom
+			FROM cbs_events_going e, cbs_membres u
+			WHERE u.id = e.uid
+			ORDER BY u.type
+		');
+		
+		while($data = $req->fetch_assoc()) {
+			$events[$data['eid']]['going'][$data['uid']] = $data;
+			
+			if(isset($events[$data['eid']]['going_type'][$data['type']]))
+				$events[$data['eid']]['going_type'][$data['type']]++;
+				
+			else $events[$data['eid']]['going_type'][$data['type']] = 1;
+		}
+		
+		if(!isset($events)) {
+			$this->layout->container_append('{{ERRORS}}');
+			return $this->layout->error_append("Rien de prévu pour l'instant");
+		}
+			
+		foreach($events as $event) {
+			$this->layout->custom_add('CUSTOM_NAME', $event['event']['name']);
+			$this->layout->custom_add('CUSTOM_DATE', ucfirst(strftime('%A %d %B %G', $event['event']['uts'])));
+			$this->layout->custom_add('CUSTOM_ID', $event['event']['id']);
+			
+			//
+			// Who is going ?
+			//
+			$count = count($event['going']);				
+			$this->layout->custom_add('CUSTOM_GOING', $count);
+			$this->layout->custom_add('CUSTOM_ARE_GOING', ($count > 1) ? 'participants' : 'participant');
+			
+			$list = array();
+			foreach($event['going'] as $user)
+				$list[] = $this->shortname($user);
+				
+			$this->layout->custom_add('CUSTOM_GOING_LIST', implode(", ", $list));
+			
+			//
+			// I'm going
+			//
+			$going = isset($event['going'][$_SESSION['uid']]) ? "J'y vais plus :(" : "J'y vais !";
+			$this->layout->custom_add('CUSTOM_IMGOING', $going);
+			
+			$this->layout->container_append(
+				$this->layout->parse_file_custom('layout/events.event.layout.html')
+			);
+		}
+	}
+	
+	function going($id) {
+		$req = $this->sql->prepare('SELECT * FROM cbs_events_going WHERE eid = ? AND uid = ?');		
+		$req->bind_param('ii', $id, $_SESSION['uid']);
+		$data = $this->sql->exec($req);
+		
+		//
+		// not already going
+		//
+		if(count($data) == 0) {
+			$req = $this->sql->prepare('INSERT INTO cbs_events_going (eid, uid) VALUES (?, ?)');
+			
+		} else $req = $this->sql->prepare('DELETE FROM cbs_events_going WHERE eid = ? AND uid = ?');
+		
+		$req->bind_param('ii', $id, $_SESSION['uid']);
+		$this->sql->exec($req);
+	}
+	
 	//
 	// updaters
 	//
@@ -738,6 +813,12 @@ class cbseraing {
 			if(($id = $this->forum->hide($_GET['id'])) != false)
 				header('Location: /forum/subject/'.$this->urlstrip($id, '#'));
 		}
+		
+		//
+		// Updating events going
+		//
+		if($_GET['page'] == 'events' && isset($_GET['toggle']))
+			$this->going($_GET['toggle']);
 	}
 	
 	function stage3() {
@@ -937,6 +1018,11 @@ class cbseraing {
 			case 'agenda':
 				$this->layout->set('header', 'Agenda des activités:');
 				$this->agenda();
+			break;
+			
+			case 'events':
+				$this->layout->set('header', 'Les events:');
+				$this->events();
 			break;
 			
 			default:

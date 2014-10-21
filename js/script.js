@@ -8,6 +8,7 @@ $(document).ready(function() {
 	$('#login').focus();
 	$('#nomreel').focus();
 	$('.fancybox').fancybox();
+	$('.btn-tooltip').tooltip();
 	$('a.top').click(function() {
 		$('html, body').animate({scrollTop: 0}, 'fast');
 		return false;
