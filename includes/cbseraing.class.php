@@ -380,6 +380,13 @@ class cbseraing {
 			$comite = 0;
 		}
 		
+		//
+		// easter egg: fake sql injection
+		//
+		if(is_string($type) && $type[0] == "'")
+			die("Bravo, tu as trouvé la « faille » d'injection SQL !
+			    Tu peux maintenant aller affoner Maxux et recevoir ta signature :D");
+		
 		$req = $this->sql->prepare('
 			SELECT *
 			FROM cbs_membres WHERE type = ? AND comite = ?
