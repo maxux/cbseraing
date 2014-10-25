@@ -475,26 +475,26 @@ class forum {
 				$this->layout->parse_file_custom('layout/forum.reply.layout.html')
 			);
 			
-			//
-			// updating read flags
-			// note: select all messages from this page and remove already-read message
-			//
-			$req = $this->root->sql->prepare('
-				INSERT INTO cbs_forum_read (uid, mid)
-				SELECT ?, id FROM (
-					SELECT author, id
-					FROM cbs_forum_messages
-					WHERE subject = ?
-					ORDER BY created ASC
-					LIMIT ?, ?
-					
-				) sub1 WHERE sub1.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
-			');
-			
-			$req->bind_param('iiiii', $_SESSION['uid'], $subject['id'], $initp, $this->ppp, $_SESSION['uid']);
-			$this->root->sql->exec($req);
-			
 		} else $this->noitem();
+		
+		//
+		// updating read flags
+		// note: select all messages from this page and remove already-read message
+		//
+		$req = $this->root->sql->prepare('
+			INSERT INTO cbs_forum_read (uid, mid)
+			SELECT ?, id FROM (
+				SELECT author, id
+				FROM cbs_forum_messages
+				WHERE subject = ?
+				ORDER BY created ASC
+				LIMIT ?, ?
+				
+			) sub1 WHERE sub1.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
+		');
+		
+		$req->bind_param('iiiii', $_SESSION['uid'], $subject['id'], $initp, $this->ppp, $_SESSION['uid']);
+		$this->root->sql->exec($req);
 	}
 	
 	//
