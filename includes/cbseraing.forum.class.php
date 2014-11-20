@@ -477,6 +477,9 @@ class forum {
 			
 		} else $this->noitem();
 		
+		if(!$this->root->connected())
+			return;
+		
 		//
 		// updating read flags
 		// note: select all messages from this page and remove already-read message

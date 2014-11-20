@@ -22,6 +22,10 @@ blockquote {
 	margin-bottom: 0;
 }
 
+code {
+	padding: 0;
+}
+
 /*
  * Override some bootstrap values
  */
