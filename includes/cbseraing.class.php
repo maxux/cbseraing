@@ -227,7 +227,7 @@ class cbseraing {
 			break;
 			
 			case 'comite':
-				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true);
+				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true);
 				return isset($allowed[$option]);
 			break;
 		}
