@@ -34,7 +34,10 @@ class cbseraing {
 	
 	function __construct($layout, $init = true) {
 		$this->layout = $layout;
+		$this->layout->custom_add('SITE_BASE', config::$base);
+		
 		$this->sql = new sql(config::$sql_serv, config::$sql_user, config::$sql_pass, config::$sql_db);
+		$this->sql->production(config::$prod);
 		
 		setlocale(LC_ALL, 'fr_BE.UTF-8');
 

@@ -3,7 +3,7 @@ namespace CBSeraing;
 
 class sql {
 	private $mysqli = NULL;
-	private $prod = true;
+	private $prod = false;
 	
 	function __construct($server, $user, $password, $db) {
 		$this->mysqli = new \mysqli($server, $user, $password, $db);
@@ -61,6 +61,10 @@ class sql {
 	
 	function fetch($req) {
 		return $req->fetch_assoc();
+	}
+	
+	function production($value) {
+		$this->prod = $value;
 	}
 }
 ?>
