@@ -226,9 +226,10 @@ class forum {
 			);
 		}
 		
+		// FIXME
 		$this->layout->custom_add('NEWITEM', !$this->root->connected() ? '' : '
-			<h5 class="text-right" style="margin-top: 30px;">
-			<a href="/forum/all-read">Marquer tous les messages comme lu</a>
+			<h5 class="text-right" style="margin-top: 0;">
+			<a class="btn btn-primary" href="/forum/all-read">Marquer tous les messages comme lu</a>
 			</h5>
 		');
 	}
@@ -351,6 +352,33 @@ class forum {
 		$this->layout->set('title', $subject['subject']);
 		
 		//
+		// checking if there is unread messages
+		// if true, checking the first pages which contains unread messages
+		// FIXME: poor way, seriously...
+		//
+		$req = $this->root->sql->prepare('
+			SELECT m.id, r.mid
+			FROM cbs_forum_messages m, cbs_forum_read r
+			WHERE m.subject = ? 
+			  AND r.mid = m.id
+			  AND r.uid = ?
+			UNION SELECT m.id, NULL
+			FROM cbs_forum_messages m
+			WHERE m.subject = ? 
+			  AND m.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
+		');
+		
+		$req->bind_param('iiii', $subject['id'], $_SESSION['uid'], $subject['id'], $_SESSION['uid']);
+		$data = $this->root->sql->exec($req);
+		
+		foreach($data as $key => $value) {
+			if($value['mid'] == null) {
+				$page = ((int)($key / $this->ppp)) + 1;
+				break;
+			}
+		}
+		
+		//
 		// if not the first page, reading first post as reminder
 		//
 		if($page > 1) {
@@ -399,8 +427,8 @@ class forum {
 		}
 		
 		//
-		// lists messages
-		//
+		// messages list
+		//		
 		$req = $this->root->sql->prepare('
 			SELECT msg.*, m.nomreel, m.surnom, m.picture, m.id authorid, m.type
 			FROM cbs_forum_messages msg, cbs_membres m
