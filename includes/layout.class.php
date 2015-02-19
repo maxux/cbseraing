@@ -22,7 +22,7 @@ class LightLayout {
 	private $pages  = array();
 	
 	function __construct() {
-		$this->render = file_get_contents('layout/'.$this->layout);
+		$this->render = file_get_contents(__DIR__.'/../layout/'.$this->layout);
 		$this->buildselect();
 	}
 	
