@@ -592,6 +592,38 @@ class cbseraing {
 	}
 	
 	//
+	// news manager
+	//
+	function news($backlog) {
+		$req = $this->sql->prepare('
+			SELECT *, UNIX_TIMESTAMP(`when`) utime FROM cbs_news 
+			ORDER BY `when` DESC LIMIT '.$backlog
+		);
+		
+		return $this->sql->exec($req);
+	}
+	
+	function homepage() {
+		$news = $this->news(1);
+		$news = $news[0];
+		
+		$intro = ($news['utime'] < time()) ? 'Dernier évènement' : 'Prochain évènement';
+		$when = strftime('Le %A %e %B %Y à %Hh%M', $news['utime']);
+			
+		$this->layout->custom_add('EVENT_ID', $news['id']);
+		$this->layout->custom_add('EVENT_INTRO', $intro);
+		$this->layout->custom_add('EVENT_NAME', $news['name']);
+		$this->layout->custom_add('EVENT_COVER', $news['cover']);
+		$this->layout->custom_add('EVENT_DESCRIPTION', $news['description']);
+		$this->layout->custom_add('EVENT_WHERE', $news['where']);
+		$this->layout->custom_add('EVENT_WHEN', $when);
+		$this->layout->custom_add('EVENT_ORIPEAUX', $news['oripeaux']);
+		$this->layout->custom_add('EVENT_LINK', $news['link']);
+		
+		$this->layout->file('layout/home.layout.html');
+	}
+	
+	//
 	// updaters
 	//
 	function updatepic($checksum) {
@@ -1042,7 +1074,7 @@ class cbseraing {
 			
 			default:
 				$this->layout->set('header', 'Accueil:');
-				$this->layout->file('layout/home.layout.html');
+				$this->homepage();
 			break;
 		}
 	}
