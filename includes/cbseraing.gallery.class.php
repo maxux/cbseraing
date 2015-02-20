@@ -143,7 +143,7 @@ class gallery {
 		
 		$this->layout->custom_add('DESCRIPTION',
 			(isset($album) && $album['description'] != '') ?
-				'<blockquote>'.$album['description'].'</blockquote>' : ''
+				'<blockquote class="gallery">'.$album['description'].'</blockquote>' : ''
 		);
 		
 		//

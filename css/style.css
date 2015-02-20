@@ -22,6 +22,10 @@ blockquote {
 	margin-bottom: 0;
 }
 
+blockquote.gallery {
+	margin-bottom: 20px;
+}
+
 code {
 	padding: 0;
 }
