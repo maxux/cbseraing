@@ -348,6 +348,29 @@ class cbseraing {
 	}
 	
 	//
+	// return an array of uploaded file (html5 compatible)
+	//
+	function files($input) {
+		$files = array();
+		$fdata = $_FILES[$input];
+		
+		if(is_array($fdata['name'])) {
+			for($i = 0; $i < count($fdata['name']); $i++) {
+				$files[] = array(
+					'name' => $fdata['name'][$i],
+					'type' => $fdata['type'][$i],
+					'tmp_name'=> $fdata['tmp_name'][$i],
+					'error' => $fdata['error'][$i], 
+					'size'  => $fdata['size'][$i]  
+				);
+			}
+			
+		} else $files[] = $fdata;
+		
+		return $files;
+	}
+	
+	//
 	// special pages
 	//
 	
@@ -978,6 +1001,14 @@ class cbseraing {
 			case 'albums':
 			case 'photos':
 				$gallery = new gallery($this, $this->layout);
+				
+				if($this->connected()) {
+					if(isset($_GET['create']))
+						$_GET['album'] = $gallery->create();
+						
+					if(isset($_GET['upload']))
+						$_GET['album'] = $gallery->upload();
+				}
 				
 				if(!isset($_GET['album']))
 					$_GET['album'] = 0;

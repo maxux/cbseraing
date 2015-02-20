@@ -29,6 +29,8 @@ url.rewrite = (
 	"^/folklore/insignes$" => "index.php?page=folklore&sub=insignes",
 	"^/folklore/comites$"  => "index.php?page=folklore&sub=comites",
 	"^/albums$" => "index.php?page=albums",
+	"^/albums/create$" => "index.php?page=albums&create",
+	"^/albums/upload$" => "index.php?page=albums&upload",
 	"^/albums/([0-9]+)-(.+)/?$" => "index.php?page=albums&album=$1",
 	"^/profile$"          => "index.php?page=profile",
 	"^/profile/picture$"  => "index.php?page=profile&picture",

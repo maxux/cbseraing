@@ -5,7 +5,7 @@ class gallery {
 	private $root;
 	private $layout;
 	
-	private $folder = 'images/albums/';
+	private $folder = 'photos/albums/';
 	
 	function __construct($root, $layout) {
 		$this->root = $root;
@@ -112,14 +112,16 @@ class gallery {
 		$this->layout->custom_add('CUSTOM_IMAGE', $item['hash']);
 		$this->layout->custom_add('CUSTOM_ID', $item['hash']);
 		$this->layout->custom_add('CUSTOM_DESCRIPTION', $item['description']);
+		$this->layout->custom_add('CUSTOM_PATH', $this->folder);
 		return $this->layout->parse_file_custom('layout/albums.album.layout.html');
 	}
 	
 	//
-	// lists forum categories
+	// lists all albums
 	//
 	function albums($id) {
 		$total = 0;
+		$isalbum = true;
 		
 		$this->layout->set('header', 'Les photos:');
 		$this->layout->file('layout/albums.layout.html');
@@ -186,11 +188,24 @@ class gallery {
 				$container .= $this->photo($photo);
 				$total++;
 			}
+			
+			$isalbum = false;
 		}
 		
-		if($total == 0) {
+		if($total == 0)
 			$this->layout->error_append("Cet album est vide pour le moment, n'hésitez pas à le remplir !");
-		}
+		
+		//
+		// album footer (manager)
+		//
+		if($this->root->connected()) {
+			$this->layout->custom_add('MANAGER_PARENT', $id);
+			$this->layout->custom_add(
+				'ALBUM_MANAGER',
+				$this->layout->parse_file_custom('layout/albums.uploader.layout.html')
+			);
+			
+		} else $this->layout->custom_add('ALBUM_MANAGER', '');
 		
 		//
 		// rendering whole shit
@@ -202,33 +217,143 @@ class gallery {
 	//
 	// picture helper
 	//
-	function resize($img_src, $img_dest, $dst_w, $dst_h) {
-		$size = GetImageSize($img_src);  
-		$src_w = $size[0];
-		$src_h = $size[1];  
-
-		$test_h = round(($dst_w / $src_w) * $src_h);
-		$test_w = round(($dst_h / $src_h) * $src_w);
-
-		if(!$dst_h)
-			$dst_h = $test_h;
-
-		elseif(!$dst_w)
-			$dst_w = $test_w;
+	function resizecrop($source, $destination, $width, $height) {
+		$source_gdim = imagecreatefromstring(file_get_contents($source));
+		list($source_width, $source_height) = getimagesize($source);
 		
-		elseif($test_h > $dst_h)
-			$dst_w = $test_w;
+		$source_aspect_ratio = $source_width / $source_height;		
+		$desired_aspect_ratio = $width / $height;
+
+		if($source_aspect_ratio > $desired_aspect_ratio) {
+			$temp_height = $height;
+			$temp_width  = (int) ($height * $source_aspect_ratio);
+		} else {
+			$temp_width  = $width;
+			$temp_height = (int) ($width / $source_aspect_ratio);
+		}
+
+		$temp_gdim = imagecreatetruecolor($temp_width, $temp_height);
+		imagecopyresampled(
+			$temp_gdim,
+			$source_gdim,
+			0, 0, 0, 0,
+			$temp_width, $temp_height,
+			$source_width, $source_height
+		);
+
+		$x0 = ($temp_width - $width) / 2;
+		$y0 = ($temp_height - $height) / 2;
+		
+		$desired_gdim = imagecreatetruecolor($width, $height);
+		imagecopy(
+			$desired_gdim,
+			$temp_gdim,
+			0, 0,
+			$x0, $y0,
+			$width, $height
+		);
+
+		imagejpeg($desired_gdim, $destination);
+		imagedestroy($temp_gdim);
+		imagedestroy($desired_gdim);
+	}
+	
+	function resize($source, $destination, $maxwidth, $maxheight) {
+		$source_gdim = imagecreatefromstring(file_get_contents($source));
+		list($width, $height) = getimagesize($source);
+		
+		$xRatio = $maxwidth / $width;
+		$yRatio = $maxheight / $height;
+
+		if($width <= $maxwidth && $height <= $maxheight) {
+			$toWidth  = $width;
+			$toHeight = $height;
 			
-		else $dst_h = $test_h;
-
-		$dst_im = imagecreatetruecolor($dst_w, $dst_h);
-		$src_im = imagecreatefromstring(file_get_contents($img_src));
-
-		imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
-		imagejpeg($dst_im, $img_dest);
-
-		imagedestroy($dst_im);  
-		imagedestroy($src_im);
+		} else if($xRatio * $height < $maxheight) {
+			$toHeight = round($xRatio * $height);
+			$toWidth  = $maxwidth;        
+		} else {
+			$toWidth  = round($yRatio * $width);
+			$toHeight = $maxheight;
+		}
+		
+		$desired_gdim = imagecreatetruecolor($toWidth, $toHeight);
+		imagecopyresampled(
+			$desired_gdim, $source_gdim,
+			0, 0, 0, 0,
+			$toWidth, $toHeight,
+			$width, $height
+		);
+		
+		imagejpeg($desired_gdim, $destination);
+		imagedestroy($source_gdim);
+		imagedestroy($desired_gdim);
+	}
+	
+	function thumb($source, $destination) {
+		$this->resizecrop($source, $destination, 512, 341);
+	}
+	
+	function optimize($source, $destination) {
+		$this->resize($source, $destination, 1280, 720);
+	}
+	
+	//
+	// gallery manager
+	//
+	
+	//
+	// upload photos
+	//
+	function upload() {
+		// html5 files array
+		$files = $this->root->files('files');
+		
+		foreach($files as $file) {
+			$hash = sha1(file_get_contents($file['tmp_name']));
+			
+			// thumbnail
+			$this->thumb($file['tmp_name'], $this->folder.$hash.'_r.jpg');
+			$this->optimize($file['tmp_name'], $this->folder.$hash.'.jpg');
+			
+			$req = $this->root->sql->prepare('
+				INSERT IGNORE INTO cbs_albums_content (hash, album, description)
+				VALUES (?, ?, NULL)
+			');
+			$req->bind_param('si', $hash, $_POST['parent']);
+			$this->root->sql->exec($req);
+		}
+		
+		return $_POST['parent'];
+	}
+	
+	//
+	// create a new album
+	//
+	private function insert($name, $description, $parent, $private) {
+		$req = $this->root->sql->prepare('
+			INSERT INTO cbs_albums (name, description, created, parent, author, private)
+			VALUES (?, ?, NOW(), ?, ?, ?)
+		');
+		
+		$req->bind_param('ssiii', $name, $description, $parent, $_SESSION['uid'], $private);
+		$this->root->sql->exec($req);
+		
+		return $req->insert_id;
+	}
+	
+	function create() {
+		if($_POST['name'] == '') {
+			$this->layout->error_append("Vous devez spécifier un nom d'album");
+			return 0;
+		}
+		
+		return $this->insert(
+			$_POST['name'],
+			$_POST['description'],
+			$_POST['parent'],
+			isset($_POST['private'])
+		);
 	}
 }
 ?>
