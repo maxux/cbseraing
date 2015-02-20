@@ -421,6 +421,7 @@ class cbseraing {
 			'*' => 'doree',
 			'+' => 'argent',
 			'r' => 'erasmus',
+			'R' => 'fossile-erasmus',
 			'F' => 'fossile-doree',
 			'f' => 'fossile-argent',
 			'b' => 'bougeois'
@@ -560,7 +561,11 @@ class cbseraing {
 			//
 			// I'm going
 			//
-			$going = isset($event['going'][$_SESSION['uid']]) ? "J'y vais plus :(" : "J'y vais !";
+			if(isset($_SESSION['uid'])) {
+				$going = isset($event['going'][$_SESSION['uid']]) ? "J'y vais plus :(" : "J'y vais !";
+			
+			} else $going = '(vous devez vous connecter)';
+			
 			$this->layout->custom_add('CUSTOM_IMGOING', $going);
 			
 			$this->layout->container_append(

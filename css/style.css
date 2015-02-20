@@ -248,6 +248,11 @@ div.stars > .fossile-argent {
 	background-color: #000000;
 }
 
+div.stars > .fossile-erasmus {
+	background-position: 0 0;
+	background-color: #000000;
+}
+
 div.stars > .bougeois {
 	background-position: 0.8em 0;
 	width: 0.8em;

@@ -95,7 +95,7 @@ class gallery {
 		}
 	}
 	
-	function append($item) {
+	function append($item, $clear) {
 		$this->layout->custom_add('CUSTOM_AUTHOR', $item['author']);
 		$this->layout->custom_add('CUSTOM_NAME', $item['name']);
 		$this->layout->custom_add('CUSTOM_DESCRIPTION', $item['description']);
@@ -103,6 +103,7 @@ class gallery {
 		$this->layout->custom_add('CUSTOM_URL', $this->root->urlstrip($item['id'], $item['name']));
 		$this->layout->custom_add('CUSTOM_CREATED', $item['created']);
 		$this->layout->custom_add('CUSTOM_IMAGE', $this->thumbnail($item['id']));
+		$this->layout->custom_add('CUSTOM_CLEAR', $clear);
 		
 		return $this->layout->parse_file_custom('layout/albums.categories.layout.html');
 	}
@@ -167,7 +168,9 @@ class gallery {
 		$container = null;
 		
 		foreach($data as $album) {
-			$container .= $this->append($album);
+			$clear = (!(($total + 1) % 4)) ? '<div class="clearfix visible-lg-block"></div>' : '';
+			$container .= $this->append($album, $clear);
+			
 			$total++;
 		}
 		
