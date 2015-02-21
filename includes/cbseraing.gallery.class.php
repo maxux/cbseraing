@@ -109,6 +109,7 @@ class gallery {
 	}
 	
 	function photo($item) {
+		$this->layout->custom_add('CUSTOM_AUTHOR', $item['author']);
 		$this->layout->custom_add('CUSTOM_IMAGE', $item['hash']);
 		$this->layout->custom_add('CUSTOM_ID', $item['hash']);
 		$this->layout->custom_add('CUSTOM_DESCRIPTION', $item['description']);
@@ -317,10 +318,10 @@ class gallery {
 			$this->optimize($file['tmp_name'], $this->folder.$hash.'.jpg');
 			
 			$req = $this->root->sql->prepare('
-				INSERT IGNORE INTO cbs_albums_content (hash, album, description)
-				VALUES (?, ?, NULL)
+				INSERT IGNORE INTO cbs_albums_content (hash, album, description, author)
+				VALUES (?, ?, NULL, ?)
 			');
-			$req->bind_param('si', $hash, $_POST['parent']);
+			$req->bind_param('sis', $hash, $_POST['parent'], $_SESSION['uid']);
 			$this->root->sql->exec($req);
 		}
 		
