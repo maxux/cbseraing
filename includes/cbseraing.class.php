@@ -637,7 +637,7 @@ class cbseraing {
 		$this->layout->custom_add('EVENT_INTRO', $intro);
 		$this->layout->custom_add('EVENT_NAME', $news['name']);
 		$this->layout->custom_add('EVENT_COVER', $news['cover']);
-		$this->layout->custom_add('EVENT_DESCRIPTION', $news['description']);
+		$this->layout->custom_add('EVENT_DESCRIPTION', nl2br($news['description']));
 		$this->layout->custom_add('EVENT_WHERE', $news['where']);
 		$this->layout->custom_add('EVENT_WHEN', $when);
 		$this->layout->custom_add('EVENT_ORIPEAUX', $news['oripeaux']);
