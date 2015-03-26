@@ -310,6 +310,16 @@ class gallery {
 		// html5 files array
 		$files = $this->root->files('files');
 		
+		if(count($files) < 1) {
+			$this->layout->error_append("Aucun fichiers trouvé");
+			return 0;
+		}
+		
+		if(!isset($files[0]['tmp_name'])) {
+			$this->layout->error_append("L'upload a échoué, vous avez envoyé trop d'un coup ?");
+			return 0;
+		}
+		
 		foreach($files as $file) {
 			$hash = sha1(file_get_contents($file['tmp_name']));
 			
