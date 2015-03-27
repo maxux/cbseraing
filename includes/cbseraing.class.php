@@ -227,7 +227,7 @@ class cbseraing {
 			break;
 			
 			case 'comite':
-				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true);
+				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true);
 				return isset($allowed[$option]);
 			break;
 		}
@@ -260,12 +260,12 @@ class cbseraing {
 	//
 	// getters
 	//
-	function types() {
+	function types($plurial = false) {
 		$types = array();
 		
 		$req = $this->sql->query('SELECT * FROM cbs_types');
 		while($data = $this->sql->fetch($req))
-			$types[$data['id']] = $data['name'];
+			$types[$data['id']] = $data[($plurial ? 'plurial' : 'name')];
 		
 		return $types;
 	}
@@ -413,6 +413,10 @@ class cbseraing {
 			die("Bravo, tu as trouvé la « faille » d'injection SQL !
 			    Tu peux maintenant aller affoner Maxux et recevoir ta signature :D");
 		
+		
+		//
+		// grabbing users from their type
+		//
 		$req = $this->sql->prepare('
 			SELECT *
 			FROM cbs_membres WHERE type = ? AND comite = ?
@@ -420,12 +424,27 @@ class cbseraing {
 		');
 		
 		$req->bind_param('ii', $type, $comite);
-		$data = $this->sql->exec($req);
+		$data1 = $this->sql->exec($req);
 		
-		if(count($data) == 0 || isset($this->skiptypes[$type]))
+		//
+		// grabbing users from additional type
+		//
+		$req = $this->sql->prepare('
+			SELECT m.*, t.type type
+			FROM cbs_membres m, cbs_add_types t
+			WHERE t.type = ? AND m.id = t.mid
+			ORDER BY m.ordre DESC, m.anbapt DESC
+		');
+		
+		$req->bind_param('i', $type);
+		$data2 = $this->sql->exec($req);
+		
+		$final = array_merge($data1, $data2);
+		
+		if(count($final) == 0 || isset($this->skiptypes[$type]))
 			return $this->layout->error_append('Personne pour le moment');
 		
-		foreach($data as $user)
+		foreach($final as $user)
 			$this->user($user);
 	}
 	
@@ -1028,18 +1047,18 @@ class cbseraing {
 				//
 				// get types from database
 				//
-				$types = $this->types();
+				$types = $this->types(true);
 				unset($types[$this->guest]);
 				
 				//
 				// building submenu
 				//
 				$url = array();
-				foreach($types as $id => $name) {
+				foreach($types as $id => $plurial) {
 					if(isset($this->skiptypes[$id]))
 						continue;
 					
-					$url['/comite/'.$this->urlstrip($id, $name.'s')] = $name.'s'; // s for plurial
+					$url['/comite/'.$this->urlstrip($id, $plurial)] = $plurial;
 				}
 					
 				$list = $this->layout->items(
