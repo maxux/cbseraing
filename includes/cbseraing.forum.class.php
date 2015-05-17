@@ -442,12 +442,16 @@ class forum {
 		$req->bind_param('iii', $subject['id'], $initp, $this->ppp);
 		$data = $this->root->sql->exec($req);
 		
+		$messages = array();
 		$unread = NULL;
+		
 		foreach($data as $message) {
 			$this->layout->custom_add('CUSTOM_STATUS',
 				(isset($this->unread['messages'][$message['id']]) ? 'active' : 'inactive').
 				(($message['type'] == 0) ? ' bleus-forum' : '')
 			);
+			
+			$messages[] = $message['id'];
 			
 			if($unread == NULL && isset($this->unread['messages'][$message['id']]))
 				$unread = $message['id'];
@@ -512,19 +516,12 @@ class forum {
 		// updating read flags
 		// note: select all messages from this page and remove already-read message
 		//
-		$req = $this->root->sql->prepare('
-			INSERT INTO cbs_forum_read (uid, mid)
-			SELECT ?, id FROM (
-				SELECT author, id
-				FROM cbs_forum_messages
-				WHERE subject = ?
-				ORDER BY created ASC
-				LIMIT ?, ?
-				
-			) sub1 WHERE sub1.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
-		');
+		$mark = array();
 		
-		$req->bind_param('iiiii', $_SESSION['uid'], $subject['id'], $initp, $this->ppp, $_SESSION['uid']);
+		foreach($messages as $message)
+			$mark[] = '('.$_SESSION['uid'].', '.$message.')';
+			
+		$req = $this->root->sql->prepare('INSERT IGNORE INTO cbs_forum_read (uid, mid) VALUES '.implode(', ', $mark));
 		$this->root->sql->exec($req);
 	}
 	
