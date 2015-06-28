@@ -667,6 +667,27 @@ class cbseraing {
 		$this->layout->file('layout/home.layout.html');
 	}
 	
+	function history() {
+		$newslist = $this->news(20);
+		
+		foreach($newslist as $news) {
+			$when = strftime('Le %A %e %B %Y à %Hh%M', $news['utime']);
+				
+			$this->layout->custom_add('EVENT_ID', $news['id']);
+			$this->layout->custom_add('EVENT_NAME', $news['name']);
+			$this->layout->custom_add('EVENT_COVER', $news['cover']);
+			$this->layout->custom_add('EVENT_DESCRIPTION', nl2br($news['description']));
+			$this->layout->custom_add('EVENT_WHERE', $news['where']);
+			$this->layout->custom_add('EVENT_WHEN', $when);
+			$this->layout->custom_add('EVENT_ORIPEAUX', $news['oripeaux']);
+			$this->layout->custom_add('EVENT_LINK', $news['link']);
+			
+			$this->layout->container_append(
+				$this->layout->parse_file_custom('layout/home.history.layout.html')
+			);
+		}
+	}
+	
 	//
 	// updaters
 	//
@@ -1122,6 +1143,11 @@ class cbseraing {
 			case 'events':
 				$this->layout->set('header', 'Les events:');
 				$this->events();
+			break;
+			
+			case 'history':
+				$this->layout->set('header', 'Nos dernières activitées:');
+				$this->history();
 			break;
 			
 			default:
