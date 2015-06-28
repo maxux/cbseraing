@@ -227,28 +227,38 @@ div.stars > span {
 	width: 1.2em;
 	height: 1.2em;
 	background-image: url(../images/stars.png);
-	background-size: 3.6em 1.2em;
+	background-size: 4.56em 1.2em;
 }
 
 div.stars > .doree {
-	background-position: 1.2em 0;
+	background-position: 2.1em 0;
 }
 
 div.stars > .argent {
-	background-position: 2.4em 0;
+	background-position: 3.3em 0;
 }
 
 div.stars > .erasmus {
 	background-position: 0 0;
 }
 
+div.stars > .palme-doree {
+	background-position: 5.39em 0;
+	width: 0.40em;
+}
+
+div.stars > .palme-argent {
+	background-position: 4.98em 0;
+	width: 0.40em;
+}
+
 div.stars > .fossile-doree {
-	background-position: 1.2em 0;
+	background-position: 2.1em 0;
 	background-color: #000000;
 }
 
 div.stars > .fossile-argent {
-	background-position: 2.4em 0;
+	background-position: 3.3em 0;
 	background-color: #000000;
 }
 
@@ -257,13 +267,12 @@ div.stars > .fossile-erasmus {
 	background-color: #000000;
 }
 
-div.stars > .bougeois {
-	background-position: 0.8em 0;
-	width: 0.8em;
-	height: 0.8em;
-	background-size: 2.4em 0.8em;
+div.stars > .bourgeois {
+	background-position: 1.05em 0;
+	width: 0.6em;
+	height: 0.6em;
+	background-size: 2.3em 0.6em;
 }
-
 
 span.separator {
 	padding-right: 20px;
@@ -335,10 +344,14 @@ span.unread {
 /*
  * Highlight
  */
-li.newmessage a {
+li.newmessage {
 	-moz-animation: newmsg 2s infinite;
 	-webkit-animation: newmsg 2s infinite;
 	animation: newmsg 2s infinite;
+}
+
+li.newmessage a {
+	color: inherit !important;
 }
 
 @-webkit-keyframes newmsg {

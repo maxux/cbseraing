@@ -466,7 +466,9 @@ class cbseraing {
 			'R' => 'fossile-erasmus',
 			'F' => 'fossile-doree',
 			'f' => 'fossile-argent',
-			'b' => 'bougeois'
+			'b' => 'bourgeois',
+			'/' => 'palme-doree',
+			'!' => 'palme-argent'
 		);
 		
 		$data = array();
