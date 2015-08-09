@@ -661,7 +661,13 @@ class cbseraing {
 		$this->layout->custom_add('EVENT_DESCRIPTION', nl2br($news['description']));
 		$this->layout->custom_add('EVENT_WHERE', $news['where']);
 		$this->layout->custom_add('EVENT_WHEN', $when);
+		
+		$title = ($news['oripeaux']) ? 'Oripeaux ?' : '';
+		$this->layout->custom_add('EVENT_TITLE_ORIPEAUX', $title);
 		$this->layout->custom_add('EVENT_ORIPEAUX', $news['oripeaux']);
+		
+		$title = ($news['link']) ? 'Lien Facebook' : '';
+		$this->layout->custom_add('EVENT_TITLE_LINK', $title);
 		$this->layout->custom_add('EVENT_LINK', $news['link']);
 		
 		$this->layout->file('layout/home.layout.html');
@@ -679,7 +685,13 @@ class cbseraing {
 			$this->layout->custom_add('EVENT_DESCRIPTION', nl2br($news['description']));
 			$this->layout->custom_add('EVENT_WHERE', $news['where']);
 			$this->layout->custom_add('EVENT_WHEN', $when);
+			
+			$title = ($news['oripeaux']) ? 'Oripeaux ?' : '';
+			$this->layout->custom_add('EVENT_TITLE_ORIPEAUX', $title);
 			$this->layout->custom_add('EVENT_ORIPEAUX', $news['oripeaux']);
+			
+			$title = ($news['link']) ? 'Lien Facebook' : '';
+			$this->layout->custom_add('EVENT_TITLE_LINK', $title);
 			$this->layout->custom_add('EVENT_LINK', $news['link']);
 			
 			$this->layout->container_append(
