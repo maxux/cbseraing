@@ -13,7 +13,13 @@ $(document).ready(function() {
 		$('html, body').animate({scrollTop: 0}, 'fast');
 		return false;
 	});
+
+
 	$('.thumb a').tooltip();
+
+	$(".btn-newsubject").click(function(){
+		$('html, body').animate({ scrollTop: $('#subjectadd').offset().top - 200 }, 'fast');
+	});
 	
 	setTimeout(forum, settings.notifications.delay);
 });
@@ -47,3 +53,7 @@ function notifications(data) {
 function forum() {
 	$.ajax({ url: "/ajax/notifications" }).done(notifications);
 }
+
+
+
+

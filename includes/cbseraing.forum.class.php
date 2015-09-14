@@ -262,6 +262,12 @@ class forum {
 		//
 		$this->layout->breadcrumb_add('/forum', 'Forum');
 		$this->layout->breadcrumb_add(null, $acl['nom']);
+
+		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
+			<div class="text-right" style="margin-top: 0;">
+			<button class="btn btn-primary btn-newsubject" href="#subjectadd">Créer un nouveau sujet</button>
+			</div>
+		');
 		
 		//
 		// list subjects
@@ -310,6 +316,8 @@ class forum {
 			);
 			
 		} else $this->noitem();
+
+		
 	}
 	
 	//
