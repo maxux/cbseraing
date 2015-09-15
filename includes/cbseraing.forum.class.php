@@ -200,6 +200,10 @@ class forum {
 		//
 		$this->layout->breadcrumb_add(null, 'Forum');
 		
+		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
+
+		');
+
 		//
 		// lists categories
 		//
@@ -262,6 +266,7 @@ class forum {
 		//
 		$this->layout->breadcrumb_add('/forum', 'Forum');
 		$this->layout->breadcrumb_add(null, $acl['nom']);
+
 
 		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
 			<div class="text-right" style="margin-top: 0;">
@@ -356,6 +361,12 @@ class forum {
 		$this->layout->breadcrumb_add('/forum', 'Forum');
 		$this->layout->breadcrumb_add('/forum/'.$this->root->urlstrip($category['id'], $category['nom']), $category['nom']);
 		$this->layout->breadcrumb_add(null, $subject['subject']);
+
+		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
+			<div class="text-right" style="margin-top: 0;">
+			<button class="btn btn-primary btn-newpost" href="#newpost">Ajouter un message</button>
+			</div>
+		');
 		
 		$this->layout->set('title', $subject['subject']);
 		

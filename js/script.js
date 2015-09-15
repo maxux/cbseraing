@@ -20,6 +20,10 @@ $(document).ready(function() {
 	$(".btn-newsubject").click(function(){
 		$('html, body').animate({ scrollTop: $('#subjectadd').offset().top - 200 }, 'fast');
 	});
+
+	$(".btn-newpost").click(function(){
+		$('html, body').animate({ scrollTop: $('#newpost').offset().top - 200 }, 'fast');
+	});
 	
 	setTimeout(forum, settings.notifications.delay);
 });
