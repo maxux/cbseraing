@@ -230,6 +230,8 @@ class cbseraing {
 				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true);
 				return isset($allowed[$option]);
 			break;
+
+
 		}
 	}
 	
@@ -533,8 +535,15 @@ class cbseraing {
 		}
 	}
 	
-	function agenda() {
-		$req = $this->sql->query('SELECT *, UNIX_TIMESTAMP(date_ev) udate FROM cbs_agenda WHERE date_ev >= DATE(NOW())');
+	function agenda(){
+
+		$localUserType = $this->usertype();
+
+		if($localUserType == 0){
+			$this->layout->container_append('{{ERRORS}}');
+			return $this->layout->error_append('Bien tenté bleu, mais ton avenir te restera inconnu...');
+		}else{
+			$req = $this->sql->query('SELECT *, UNIX_TIMESTAMP(date_ev) udate FROM cbs_agenda WHERE date_ev >= DATE(NOW())');
 		if($req->num_rows == 0) {
 			$this->layout->container_append('{{ERRORS}}');
 			return $this->layout->error_append("Rien de prévu pour l'instant");
@@ -550,6 +559,9 @@ class cbseraing {
 				$this->layout->parse_file_custom('layout/agenda.layout.html')
 			);
 		}
+		}
+
+		
 	}
 	
 	function events() {		
@@ -1161,6 +1173,8 @@ class cbseraing {
 				$this->layout->set('header', 'Nos dernières activitées:');
 				$this->history();
 			break;
+
+
 			
 			default:
 				$this->layout->set('header', 'Accueil:');
