@@ -383,3 +383,8 @@ li.newmessage a {
 	font-family: "Comic Sans MS";
 	font-size: 18px;
 }
+
+
+iframe body{
+	background: transparent;
+}
