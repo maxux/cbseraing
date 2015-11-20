@@ -5,6 +5,7 @@ class forum {
 	private $root;
 	private $layout;
 	private $type;
+	private $redis;
 	
 	// posts per page
 	private $ppp = 15;
@@ -30,6 +31,9 @@ class forum {
 		
 		$this->layout->set('header', 'Le forum:');
 		$this->type = $this->root->usertype();
+		
+		$this->redis = new \Redis();
+		$this->redis->connect('127.0.0.1');
 		
 		//
 		// checking if there is unread post
@@ -598,6 +602,12 @@ class forum {
 		$req->bind_param('iis', $author, $category, $subject);
 		$this->root->sql->exec($req);
 		
+		//
+		// dispatch event to redis
+		//
+		$message = array('event' => 'subject', 'uid' => $author, 'subject' => $subject);
+		$this->redis->publish('cbs-push', json_encode($message));
+		
 		return $req->insert_id;
 	}
 	
@@ -613,6 +623,12 @@ class forum {
 		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');
 		$mesreq->bind_param('i', $subject);
 		$message = $this->root->sql->exec($mesreq);
+		
+		//
+		// dispatch event to redis
+		//
+		$message = array('event' => 'reply', 'uid' => $author, 'subject' => $subject);
+		$this->redis->publish('cbs-push', json_encode($message));
 		
 		return $message[0];
 	}
