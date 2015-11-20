@@ -605,19 +605,25 @@ class forum {
 		//
 		// dispatch event to redis
 		//
-		$message = array('event' => 'subject', 'uid' => $author, 'subject' => $subject);
-		$this->redis->publish('cbs-push', json_encode($message));
+		$notif = array(
+			'event' => 'subject',
+			'uid' => $author,
+			'subject' => $subject,
+			'category' => $category,
+		);
+		
+		$this->redis->publish('cbs-push', json_encode($notif));
 		
 		return $req->insert_id;
 	}
 	
-	function reply($subject, $author, $message) {
+	function reply($subject, $author, $content) {
 		$req = $this->root->sql->prepare('
 			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden)
 			VALUES (?, ?, NOW(), ?, 0)
 		');
 		
-		$req->bind_param('iis', $subject, $author, $message);
+		$req->bind_param('iis', $subject, $author, $content);
 		$this->root->sql->exec($req);
 		
 		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');
@@ -627,8 +633,15 @@ class forum {
 		//
 		// dispatch event to redis
 		//
-		$message = array('event' => 'reply', 'uid' => $author, 'subject' => $subject);
-		$this->redis->publish('cbs-push', json_encode($message));
+		$notif = array(
+			'event' => 'reply',
+			'uid' => $author,
+			'subject' => $subject,
+			'message' => $content,
+			'category' => $message[0]['category'],
+		);
+		
+		$this->redis->publish('cbs-push', json_encode($notif));
 		
 		return $message[0];
 	}
