@@ -5,6 +5,7 @@ class forum {
 	private $root;
 	private $layout;
 	private $type;
+	private $redis;
 	
 	// posts per page
 	private $ppp = 15;
@@ -30,6 +31,9 @@ class forum {
 		
 		$this->layout->set('header', 'Le forum:');
 		$this->type = $this->root->usertype();
+		
+		$this->redis = new \Redis();
+		$this->redis->connect('127.0.0.1');
 		
 		//
 		// checking if there is unread post
@@ -598,21 +602,46 @@ class forum {
 		$req->bind_param('iis', $author, $category, $subject);
 		$this->root->sql->exec($req);
 		
+		//
+		// dispatch event to redis
+		//
+		$notif = array(
+			'event' => 'subject',
+			'uid' => $author,
+			'subject' => $subject,
+			'category' => $category,
+		);
+		
+		$this->redis->publish('cbs-push', json_encode($notif));
+		
 		return $req->insert_id;
 	}
 	
-	function reply($subject, $author, $message) {
+	function reply($subject, $author, $content) {
 		$req = $this->root->sql->prepare('
 			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden)
 			VALUES (?, ?, NOW(), ?, 0)
 		');
 		
-		$req->bind_param('iis', $subject, $author, $message);
+		$req->bind_param('iis', $subject, $author, $content);
 		$this->root->sql->exec($req);
 		
 		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');
 		$mesreq->bind_param('i', $subject);
 		$message = $this->root->sql->exec($mesreq);
+		
+		//
+		// dispatch event to redis
+		//
+		$notif = array(
+			'event' => 'reply',
+			'uid' => $author,
+			'subject' => $subject,
+			'message' => $content,
+			'category' => $message[0]['category'],
+		);
+		
+		$this->redis->publish('cbs-push', json_encode($notif));
 		
 		return $message[0];
 	}
