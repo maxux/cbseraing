@@ -612,7 +612,10 @@ class forum {
 			'category' => $category,
 		);
 		
-		$this->redis->publish('cbs-push', json_encode($notif));
+		try {
+			$this->redis->publish('cbs-push', json_encode($notif));
+
+		} catch (Exception $e) { }
 		
 		return $req->insert_id;
 	}
