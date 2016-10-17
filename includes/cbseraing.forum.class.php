@@ -181,7 +181,17 @@ class forum {
 			$this->layout->parse_file_custom('layout/forum.edit.layout.html')
 		);
 	}
-	
+
+	//
+	// dispatch notifications
+	//
+	private function push($payload) {
+		try {
+			$this->redis->publish('cbs-push', json_encode($payload));
+
+		} catch (Exception $e) { }
+	}
+
 	//
 	// access denied
 	//
@@ -613,10 +623,7 @@ class forum {
 			'rawid'    => $req->insert_id,
 		);
 
-		try {
-			$this->redis->publish('cbs-push', json_encode($notif));
-
-		} catch (Exception $e) { }
+		$this->push($notif);
 
 		return $req->insert_id;
 	}
@@ -645,10 +652,7 @@ class forum {
 			'category' => $message[0]['category'],
 		);
 
-		try {
-			$this->redis->publish('cbs-push', json_encode($notif));
-
-		} catch (Exception $e) { }
+		$this->push($notif);
 
 		return $message[0];
 	}
