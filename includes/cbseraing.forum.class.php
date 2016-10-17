@@ -598,57 +598,61 @@ class forum {
 			INSERT INTO cbs_forum_subjects (author, created, category, subject, postit)
 			VALUES (?, NOW(), ?, ?, 0)
 		');
-		
+
 		$req->bind_param('iis', $author, $category, $subject);
 		$this->root->sql->exec($req);
-		
+
 		//
 		// dispatch event to redis
 		//
 		$notif = array(
-			'event' => 'subject',
-			'uid' => $author,
-			'subject' => $subject,
+			'event'    => 'subject',
+			'uid'      => $author,
+			'subject'  => $subject,
 			'category' => $category,
+			'rawid'    => $req->insert_id,
 		);
-		
+
 		try {
 			$this->redis->publish('cbs-push', json_encode($notif));
 
 		} catch (Exception $e) { }
-		
+
 		return $req->insert_id;
 	}
-	
+
 	function reply($subject, $author, $content) {
 		$req = $this->root->sql->prepare('
 			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden)
 			VALUES (?, ?, NOW(), ?, 0)
 		');
-		
+
 		$req->bind_param('iis', $subject, $author, $content);
 		$this->root->sql->exec($req);
-		
+
 		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');
 		$mesreq->bind_param('i', $subject);
 		$message = $this->root->sql->exec($mesreq);
-		
+
 		//
 		// dispatch event to redis
 		//
 		$notif = array(
-			'event' => 'reply',
-			'uid' => $author,
-			'subject' => $subject,
-			'message' => $content,
+			'event'    => 'reply',
+			'uid'      => $author,
+			'subject'  => $subject,
+			'message'  => $content,
 			'category' => $message[0]['category'],
 		);
-		
-		$this->redis->publish('cbs-push', json_encode($notif));
-		
+
+		try {
+			$this->redis->publish('cbs-push', json_encode($notif));
+
+		} catch (Exception $e) { }
+
 		return $message[0];
 	}
-	
+
 	//
 	// reader
 	//
