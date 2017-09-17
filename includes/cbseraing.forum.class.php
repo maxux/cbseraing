@@ -6,41 +6,41 @@ class forum {
 	private $layout;
 	private $type;
 	private $redis;
-	
+
 	// posts per page
 	private $ppp = 15;
-	
+
 	private $parser = array(
 		'nicks' => array(),
 	);
-	
+
 	private $unread = array(
 		'categories' => array(),
 		'subjects' => array(),
 		'messages' => array()
 	);
-	
+
 	private $pictos = array(
 		'edit' => 'pencil',
 		'hide' => 'remove'
 	);
-	
+
 	function __construct($root, $layout) {
 		$this->root = $root;
 		$this->layout = $layout;
-		
+
 		$this->layout->set('header', 'Le forum:');
 		$this->type = $this->root->usertype();
-		
+
 		$this->redis = new \Redis();
 		$this->redis->connect('127.0.0.1');
-		
+
 		//
 		// checking if there is unread post
 		//
 		if(!$this->root->connected())
 			return;
-			
+
 		$req = $this->root->sql->prepare('
 			SELECT m.id, m.subject, s.category
 			FROM cbs_forum_messages m, cbs_membres u, cbs_forum_subjects s, cbs_forum_acl a
@@ -51,132 +51,132 @@ class forum {
 			  AND s.category = a.cid
 			  AND a.tid = u.type
 		');
-		
+
 		$req->bind_param('ii', $_SESSION['uid'], $_SESSION['uid']);
 		$data = $this->root->sql->exec($req);
-		
+
 		foreach($data as $message) {
 			$this->unread['messages'][$message['id']] = $message;
 			$this->unread['categories'][$message['category']] = $message;
 			$this->unread['subjects'][$message['subject']] = $message;
 		}
 	}
-	
+
 	//
 	// generate error and break (or not)
 	//
 	function error($str, $fatal) {
 		$this->layout->error_append($str);
-		
+
 		//
 		// cancel layout
 		//
 		$this->layout->custom_add('FORUM', '');
-		
+
 		if($fatal) {
 			$this->noitem();
 			return false;
 		}
-		
+
 	}
-	
+
 	//
 	// generate glyphcons and links for edit/hide message
 	//
 	function request($type, $message) {
 		if(!$this->root->connected())
 			return '';
-		
+
 		if($message['author'] != $_SESSION['uid'])
 			return '';
-		
+
 		return '<a href="/forum/'.$type.'/'.$message['id'].'">'.
 		       '<span class="glyphicon glyphicon-'.$this->pictos[$type].'"></span>'.
 		       '</a>';
 	}
-	
+
 	function getpost($id) {
 		$post = $this->root->sql->prepare('SELECT * FROM cbs_forum_messages WHERE id = ?');
 		$post->bind_param('i', $id);
 		$data = $this->root->sql->exec($post);
-		
+
 		return $data;
 	}
-	
+
 	//
 	// hide a post
 	//
 	function hide($id) {
 		if(!$this->root->connected())
 			return $this->error("Non autorisé", true);
-			
+
 		// reading post
 		$data = $this->getpost($id);
-		
+
 		if(count($data) == 0)
 			return $this->error("Ce message n'existe pas", true);
-			
+
 		$message = $data[0];
-		
+
 		if($message['author'] != $_SESSION['uid'])
 			return $this->error("Nope.", true);
-		
+
 		// update
 		$post = $this->root->sql->prepare('UPDATE cbs_forum_messages SET hidden = 1 WHERE id = ?');
 		$post->bind_param('i', $id);
 		$this->root->sql->exec($post);
-		
+
 		return $message['subject'];
 	}
-	
+
 	//
 	// update a post (edit)
 	//
-	function update($id) {		
+	function update($id) {
 		if(!$this->root->connected())
 			return $this->error("Non autorisé", true);
-			
+
 		// reading post
 		$data = $this->getpost($id);
-		
+
 		if(count($data) == 0)
 			return $this->error("Ce message n'existe pas", true);
-			
+
 		$message = $data[0];
-		
+
 		if($message['author'] != $_SESSION['uid'])
 			return $this->error("Nope.", true);
-		
+
 		// update
 		$post = $this->root->sql->prepare('UPDATE cbs_forum_messages SET message = ? WHERE id = ?');
 		$post->bind_param('si', $_POST['message'], $id);
 		$this->root->sql->exec($post);
-		
+
 		return $message['subject'];
 	}
-	
+
 	//
 	// request the post-edit page
 	//
 	function edit($id) {
 		if(!$this->root->connected())
 			return $this->error("Non autorisé", true);
-		
-		// reading post	
+
+		// reading post
 		$data = $this->getpost($id);
-		
+
 		if(count($data) == 0)
 			return $this->error("Ce message n'existe pas", true);
-			
+
 		$message = $data[0];
-		
+
 		if($message['author'] != $_SESSION['uid'])
 			return $this->error("Nope.", true);
-		
+
 		$this->layout->custom_add('CUSTOM_MESSAGE', $message['message']);
 		$this->layout->custom_add('CUSTOM_MESSAGE_ID', $id);
 		$this->layout->custom_add('NEWITEM', '');
-		
+
 		$this->layout->custom_append('FORUM',
 			$this->layout->parse_file_custom('layout/forum.edit.layout.html')
 		);
@@ -198,13 +198,13 @@ class forum {
 	function denied() {
 		$this->error("Ce que vous avez demandé n'existe pas (ou vous n'y avez pas accès)", true);
 	}
-	
+
 	function noitem() {
 		$this->layout->custom_add('CUSTOM_CATEGORY_ID', '');
 		$this->layout->custom_add('CUSTOM_SUBJECT_ID', '');
 		$this->layout->custom_add('NEWITEM', '');
 	}
-	
+
 	//
 	// lists forum categories
 	//
@@ -213,7 +213,7 @@ class forum {
 		// empty breadcrumb
 		//
 		$this->layout->breadcrumb_add(null, 'Forum');
-		
+
 		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
 
 		');
@@ -226,10 +226,10 @@ class forum {
 			WHERE a.cid = c.id
 			  AND a.tid = ?
 		');
-		
+
 		$req->bind_param('i', $this->type);
 		$data = $this->root->sql->exec($req);
-		
+
 		foreach($data as $category) {
 			$this->layout->custom_add('CUSTOM_ID', $category['id']);
 			$this->layout->custom_add('CUSTOM_URL', $this->root->urlstrip($category['id'], $category['nom']));
@@ -238,12 +238,12 @@ class forum {
 			$this->layout->custom_add('CUSTOM_STATUS',
 				(isset($this->unread['categories'][$category['id']]) ? 'active' : 'inactive')
 			);
-			
+
 			$this->layout->custom_append('FORUM',
 				$this->layout->parse_file_custom('layout/forum.categories.layout.html')
 			);
 		}
-		
+
 		// FIXME
 		$this->layout->custom_add('NEWITEM', !$this->root->connected() ? '' : '
 			<h5 class="text-right" style="margin-top: 0;">
@@ -251,7 +251,7 @@ class forum {
 			</h5>
 		');
 	}
-	
+
 	//
 	// lists forum subjects of a given category
 	//
@@ -265,16 +265,16 @@ class forum {
 			  AND a.cid = c.id
 			  AND a.tid = ?
 		');
-		
-		
+
+
 		$req->bind_param('ii', $category, $this->type);
 		$acl = $this->root->sql->exec($req);
-		
+
 		if(count($acl) == 0)
 			return $this->denied();
-		
+
 		$acl = $acl[0];
-		
+
 		//
 		// breadcrumb
 		//
@@ -289,7 +289,7 @@ class forum {
 			<button class="btn btn-primary btn-newsubject" href="#subjectadd">Créer un nouveau sujet</button>
 			</div>
 		');
-		
+
 		//
 		// list subjects
 		//
@@ -301,16 +301,16 @@ class forum {
 			  AND category = ?
 			  AND m.id = (
 			     SELECT id FROM cbs_forum_messages WHERE subject = m.subject ORDER BY created DESC LIMIT 1
-			) ORDER BY m.created DESC 
-			
+			) ORDER BY m.created DESC
+
 		');
-		
+
 		$req->bind_param('i', $category);
 		$data = $this->root->sql->exec($req);
-		
+
 		if(count($data) == 0)
 			$this->error("Il n'y a aucun sujet dans cette catégorie pour l'instant", false);
-		
+
 		foreach($data as $subject) {
 			$this->layout->custom_add('CUSTOM_ID', $subject['id']);
 			$this->layout->custom_add('CUSTOM_URL', $this->root->urlstrip($subject['id'], $subject['subject']));
@@ -324,23 +324,23 @@ class forum {
 			$this->layout->custom_add('CUSTOM_STATUS',
 				(isset($this->unread['subjects'][$subject['id']]) ? 'active' : 'inactive')
 			);
-			
+
 			$this->layout->custom_append('FORUM',
 				$this->layout->parse_file_custom('layout/forum.subjects.layout.html')
 			);
 		}
-		
+
 		if($this->root->connected() && $acl['write']) {
 			$this->layout->custom_add('CUSTOM_CATEGORY_ID', $category);
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.newpost.layout.html')
 			);
-			
+
 		} else $this->noitem();
 
-		
+
 	}
-	
+
 	//
 	// display a forum post
 	//
@@ -354,15 +354,15 @@ class forum {
 			  AND s.category = a.cid
 			  AND a.tid = ?
 		');
-		
+
 		$req->bind_param('ii', $subject, $this->type);
 		$subject = $this->root->sql->exec($req);
-		
+
 		if(count($subject) == 0)
 			return $this->denied();
-		
+
 		$subject = $subject[0];
-		
+
 		//
 		// grab category name
 		//
@@ -370,7 +370,7 @@ class forum {
 		$req->bind_param('i', $subject['category']);
 		$category = $this->root->sql->exec($req);
 		$category = $category[0];
-		
+
 		//
 		// building breadcrumb
 		//
@@ -381,15 +381,15 @@ class forum {
 		//
 		//Build upper "add message" button
 		//
-		
+
 		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
 			<div class="text-right" style="margin-top: 0;">
 			<button class="btn btn-primary btn-newpost" href="#newpost">Ajouter un message</button>
 			</div>
 		');
-		
+
 		$this->layout->set('title', $subject['subject']);
-		
+
 		//
 		// checking if there is unread messages
 		// if true, checking the first pages which contains unread messages
@@ -398,25 +398,25 @@ class forum {
 		$req = $this->root->sql->prepare('
 			SELECT m.id, r.mid
 			FROM cbs_forum_messages m, cbs_forum_read r
-			WHERE m.subject = ? 
+			WHERE m.subject = ?
 			  AND r.mid = m.id
 			  AND r.uid = ?
 			UNION SELECT m.id, NULL
 			FROM cbs_forum_messages m
-			WHERE m.subject = ? 
+			WHERE m.subject = ?
 			  AND m.id NOT IN (SELECT mid FROM cbs_forum_read WHERE uid = ?)
 		');
-		
+
 		$req->bind_param('iiii', $subject['id'], $_SESSION['uid'], $subject['id'], $_SESSION['uid']);
 		$data = $this->root->sql->exec($req);
-		
+
 		foreach($data as $key => $value) {
 			if($value['mid'] == null) {
 				$page = ((int)($key / $this->ppp)) + 1;
 				break;
 			}
 		}
-		
+
 		//
 		// if not the first page, reading first post as reminder
 		//
@@ -429,34 +429,34 @@ class forum {
 				ORDER BY created ASC
 				LIMIT 1
 			');
-			
+
 			$initp = (($page - 1) * $this->ppp);
 			$req->bind_param('i', $subject['id']);
 			$data = $this->root->sql->exec($req);
-			
+
 			$unread = NULL;
 			foreach($data as $message) {
 				$this->layout->custom_add('CUSTOM_STATUS',
 					'reminder'.(($message['type'] == 0) ? ' bleus-forum' : '')
 				);
-				
+
 				$this->layout->custom_add('CUSTOM_EXTRA_HEADER', 'Rappel du message original:');
 				$this->layout->custom_add('CUSTOM_ID', $message['id']);
 				$this->layout->custom_add('CUSTOM_PLAIN_TEXT', $message['message']);
 				$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
 				$this->layout->custom_add('CUSTOM_DATE', $message['created']);
 				$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));
-				
+
 				$this->layout->custom_add('CUSTOM_AUTHOR', $this->root->shortname($message));
 				$this->layout->custom_add('CUSTOM_AUTHOR_ID', $message['authorid']);
 				$this->layout->custom_add('CUSTOM_AUTHOR_URL',
 					$this->root->urlslash($message['authorid'],
 					$this->root->shortname($message))
 				);
-				
+
 				$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 				$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
-				
+
 				$this->layout->custom_append('FORUM',
 					$this->layout->parse_file_custom(
 						'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
@@ -464,10 +464,10 @@ class forum {
 				);
 			}
 		}
-		
+
 		//
 		// messages list
-		//		
+		//
 		$req = $this->root->sql->prepare('
 			SELECT msg.*, m.nomreel, m.surnom, m.picture, m.id authorid, m.type
 			FROM cbs_forum_messages msg, cbs_membres m
@@ -476,59 +476,59 @@ class forum {
 			ORDER BY created ASC
 			LIMIT ?, ?
 		');
-		
+
 		$initp = (($page - 1) * $this->ppp);
 		$req->bind_param('iii', $subject['id'], $initp, $this->ppp);
 		$data = $this->root->sql->exec($req);
-		
+
 		$messages = array();
 		$unread = NULL;
-		
+
 		foreach($data as $message) {
 			$this->layout->custom_add('CUSTOM_STATUS',
 				(isset($this->unread['messages'][$message['id']]) ? 'active' : 'inactive').
 				(($message['type'] == 0) ? ' bleus-forum' : '')
 			);
-			
+
 			$messages[] = $message['id'];
-			
+
 			if($unread == NULL && isset($this->unread['messages'][$message['id']]))
 				$unread = $message['id'];
-			
+
 			$this->layout->custom_add('CUSTOM_EXTRA_HEADER', '');
 			$this->layout->custom_add('CUSTOM_ID', $message['id']);
 			$this->layout->custom_add('CUSTOM_PLAIN_TEXT', $message['message']);
 			$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
 			$this->layout->custom_add('CUSTOM_DATE', $message['created']);
 			$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));
-			
+
 			$this->layout->custom_add('CUSTOM_AUTHOR', $this->root->shortname($message));
 			$this->layout->custom_add('CUSTOM_AUTHOR_ID', $message['authorid']);
 			$this->layout->custom_add('CUSTOM_AUTHOR_URL',
 				$this->root->urlslash($message['authorid'],
 				$this->root->shortname($message))
 			);
-			
+
 			$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 			$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
-			
+
 			$this->layout->custom_append('FORUM',
 				$this->layout->parse_file_custom(
 					'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
 				)
 			);
 		}
-		
+
 		$this->layout->custom_add('CUSTOM_ID', $unread);
 		$this->layout->preload_append($this->layout->parse_file_custom('layout/forum.scripts.goto.layout.html'));
-		
+
 		//
 		// pages
 		//
 		$req = $this->root->sql->prepare('SELECT COUNT(*) c FROM cbs_forum_messages msg WHERE msg.subject = ?');
 		$req->bind_param('i', $subject['id']);
 		$data = $this->root->sql->exec($req);
-		
+
 		$total = $data[0]['c'];
 		for($i = 0; $i < $total / $this->ppp; $i++)
 			$this->layout->pages_add(
@@ -536,7 +536,7 @@ class forum {
 				'/forum/subject/'.$subject['id'].'-'.($i + 1).'-'.$this->root->strip($subject['subject']),
 				($i + 1) == $page
 			);
-		
+
 		//
 		// reply form and post-read actions
 		//
@@ -545,29 +545,29 @@ class forum {
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.reply.layout.html')
 			);
-			
+
 		} else $this->noitem();
-		
+
 		if(!$this->root->connected())
 			return;
-		
+
 		//
 		// updating read flags
 		// note: select all messages from this page and remove already-read message
 		//
 		$mark = array();
-		
+
 		foreach($messages as $message)
 			$mark[] = '('.$_SESSION['uid'].', '.$message.')';
-			
+
 		$req = $this->root->sql->prepare('INSERT IGNORE INTO cbs_forum_read (uid, mid) VALUES '.implode(', ', $mark));
 		$this->root->sql->exec($req);
 	}
-	
+
 	//
 	// helpers
 	//
-	
+
 	//
 	// light bbcode support
 	//
@@ -578,28 +578,28 @@ class forum {
 		$str = preg_replace('#(\[i\])(.*?)(\[/i\])#is', '<em>\2</em>', $str);
 		$str = preg_replace('#(\[code\])(.*?)(\[/code\])#is', '<code>\2</code>', $str);
 		$str = preg_replace('#(\[img\])(.*?)(\[/img\])#is', '<img src="\2" class="img-responsive" />', $str);
-		
+
 		$str = preg_replace('#(\[video\])(.*?)(\[/video\])#is',
 			'<video width="480" height="320" controls><source src="$2"></video>',
 			$str);
-		
+
 		// neasted quote
 		do {
 			$str = preg_replace('#(\[cite\])(((?R)|.)*?)(\[/cite\])#is',
 			                    '<blockquote>\2</blockquote>', $str, -1, $count);
-			
+
 		} while($count);
-		
+
 		// remove bbcode link and then auto-detect url
 		$str = preg_replace('#(\[a\])(.*?)(\[/a\])#is', '\2', $str);
 		$str = preg_replace('#(?<![\S"])(https?://\S+)#iS', '<a href="\1" target="_blank">\1</a>', $str);
-		
+
 		$str = nl2br($str);
-		
+
 		return $str;
 	}
-	
-	
+
+
 	//
 	// creation
 	//
@@ -671,10 +671,10 @@ class forum {
 			  AND s.category = a.cid
 			  AND a.tid = u.type
 		');
-		
+
 		$req->bind_param('ii', $_SESSION['uid'], $_SESSION['uid']);
 		$this->root->sql->exec($req);
-		
+
 		// reset unread
 		$this->unread = array(
 			'categories' => array(),
@@ -682,7 +682,7 @@ class forum {
 			'messages' => array()
 		);
 	}
-	
+
 	function unreads() {
 		return count($this->unread['messages']);
 	}
