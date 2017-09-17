@@ -1,14 +1,14 @@
 <div id="newpost" class="row" style="margin-top: 75px;">
 	<h2>Répondre</h2>
-	
+
 	<form role="form" method="post" action="/forum/reply">
 		<input type="hidden" name="subject" value="{{CUSTOM_SUBJECT_ID}}" />
-		
+
 		<div class="form-group">
 			<label for="message">Message <a href="" data-toggle="modal" data-target="#balises">(voir les balises)</a></label>
 			<textarea class="form-control forumtext" id="message" name="message" style="height: 200px;"></textarea>
 		</div>
-		
+
 		<button type="submit" class="btn btn-primary">Répondre</button>
 	</form>
 </div>

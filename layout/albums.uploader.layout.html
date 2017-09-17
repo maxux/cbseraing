@@ -2,7 +2,7 @@
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newalbum">
 		Créer un nouvel album
 	</button>
-	
+
 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploader">
 		Ajouter des photos dans cet album
 	</button>
@@ -17,18 +17,18 @@
 			</button>
 			<h4 class="modal-title">Ajouter des images dans cet album</h4>
 		</div>
-		
+
 		<form action="/albums/upload" method="post" class="form-horizontal" enctype="multipart/form-data">
 		<div class="modal-body">
 			<input type="hidden" name="parent" value="{{MANAGER_PARENT}}">
-			
+
 			<div class="form-group">
 				<div class="col-sm-12">
 					<input type="file" name="files[]" id="files" multiple>
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button type="submit" class="btn btn-success">Envoyer</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -47,7 +47,7 @@
 			</button>
 			<h4 class="modal-title">Créer un nouvel album</h4>
 		</div>
-		
+
 		<form action="/albums/create" method="post" class="form-horizontal">
 		<div class="modal-body">
 			<div class="form-group">
@@ -56,24 +56,24 @@
 				<input type="text" class="form-control" name="name" id="name">
 				</div>
 			</div>
-			
+
 			<div class="form-group">
 				<label for="description" class="col-sm-3 control-label">Description</label>
 				<div class="col-sm-9">
 				<input type="text" class="form-control" name="description" id="description">
 				</div>
 			</div>
-			
+
 			<div class="form-group">
 				<label for="private" class="col-sm-3 control-label">Album privé</label>
 				<div class="col-sm-1">
 				<input type="checkbox" class="form-control" name="private" id="private">
 				</div>
 			</div>
-			
+
 			<input type="hidden" name="parent" value="{{MANAGER_PARENT}}">
 		</div>
-		
+
 		<div class="modal-footer">
 			<button type="submit" class="btn btn-success">Créer l'album</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>

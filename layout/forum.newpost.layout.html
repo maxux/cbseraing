@@ -1,19 +1,19 @@
 <div class="row" style="margin-top: 75px;" id="subjectadd">
 	<h2>Nouveau sujet</h2>
-	
+
 	<form role="form" method="post" action="/forum/create">
 		<input type="hidden" name="category" value="{{CUSTOM_CATEGORY_ID}}" />
-		
+
 		<div class="form-group">
 			<label for="subject">Sujet</label>
 			<input type="text" class="form-control" id="subject" name="subject" placeholder="Nouveau sujet">
 		</div>
-		
+
 		<div class="form-group">
 			<label for="message">Message</label>
 			<textarea class="form-control forumtext" id="message" name="message" style="height: 200px;"></textarea>
 		</div>
-		
+
 		<button type="submit" class="btn btn-primary">Créer le sujet</button>
 	</form>
 </div>
