@@ -717,6 +717,25 @@ class cbseraing {
 		}
 	}
 
+	function contact() {
+		$this->layout->custom_add('CONTACT_NUMBER', $this->variable('contact'));
+		$this->layout->file('layout/contact.layout.html');
+	}
+
+	//
+	// variable getter
+	//
+	function variable($key) {
+		$req = $this->sql->prepare("SELECT `value` FROM cbs_vars WHERE `key` = ?");
+		$req->bind_param('s', $key);
+		$rows = $this->sql->exec($req);
+
+		if(count($rows) == 1)
+			return $rows[0]['value'];
+
+		return null;
+	}
+
 	//
 	// updaters
 	//
@@ -1089,7 +1108,7 @@ class cbseraing {
 
 			case 'contact':
 				$this->layout->set('header', 'Nous contacter:');
-				$this->layout->file('layout/contact.layout.html');
+				$this->contact();
 			break;
 
 			case 'comite':
