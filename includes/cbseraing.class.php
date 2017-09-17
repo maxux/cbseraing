@@ -541,33 +541,32 @@ class cbseraing {
 		}
 	}
 
-	function agenda(){
-
+	function agenda() {
 		$localUserType = $this->usertype();
 
-		if($localUserType == 0){
+		if($localUserType == 0) {
 			$this->layout->container_append('{{ERRORS}}');
 			return $this->layout->error_append('Bien tenté bleu, mais ton avenir te restera inconnu...');
-		}else{
+
+		} else {
 			$req = $this->sql->query('SELECT *, UNIX_TIMESTAMP(date_ev) udate FROM cbs_agenda WHERE date_ev >= DATE(NOW())');
-		if($req->num_rows == 0) {
-			$this->layout->container_append('{{ERRORS}}');
-			return $this->layout->error_append("Rien de prévu pour l'instant");
+
+			if($req->num_rows == 0) {
+				$this->layout->container_append('{{ERRORS}}');
+				return $this->layout->error_append("Rien de prévu pour l'instant");
+			}
+
+			while(($event = $this->sql->fetch($req))) {
+				$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
+				$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
+				$this->layout->custom_add('CUSTOM_DATE', 'Le '.date('d/m/Y', $event['udate']));
+				$this->layout->custom_add('CUSTOM_THEME', $event['theme'] ? $event['theme'] : '(nope)');
+
+				$this->layout->container_append(
+					$this->layout->parse_file_custom('layout/agenda.layout.html')
+				);
+			}
 		}
-
-		while(($event = $this->sql->fetch($req))) {
-			$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
-			$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
-			$this->layout->custom_add('CUSTOM_DATE', 'Le '.date('d/m/Y', $event['udate']));
-			$this->layout->custom_add('CUSTOM_THEME', $event['theme'] ? $event['theme'] : '(nope)');
-
-			$this->layout->container_append(
-				$this->layout->parse_file_custom('layout/agenda.layout.html')
-			);
-		}
-		}
-
-
 	}
 
 	function events() {
