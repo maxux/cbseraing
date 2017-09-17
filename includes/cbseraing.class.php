@@ -1,10 +1,11 @@
 <?php
+namespace CBSeraing;
+
 // checking if config class is set, otherwise this is probably
 // a fresh cloned repository, you should check sample config
-if(!file_exists('cbseraing.config.class.php'))
+if(!file_exists(dirname(__FILE__).'/cbseraing.config.class.php'))
     die(trigger_error("Configuration file missing", E_USER_ERROR));
 
-namespace CBSeraing;
 include('cbseraing.config.class.php');
 include('cbseraing.sql.class.php');
 include('cbseraing.forum.class.php');
