@@ -190,6 +190,14 @@ div.error {
 	padding: 10px 5px 10px 15px;
 }
 
+.row.information {
+	margin: 0 0 8px 0;
+	padding: 10px 5px 10px 15px;
+	color: #6D2D95;
+	font-size: 14px;
+	font-weight: bold;
+}
+
 .row.reminder {
 	border: solid 4px #6D2D95;
 }
@@ -297,7 +305,7 @@ span.unread {
 }
 
 /*
- * 
+ *
  */
 #couleurs h3 {
 	margin-top: 20px;

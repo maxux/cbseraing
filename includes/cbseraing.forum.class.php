@@ -206,6 +206,16 @@ class forum {
 	}
 
 	//
+	// return annual date period (eg. "2016 - 2017" from "21 dec. 2016" date)
+	//
+	function annual($source) {
+		if((int) date('n', $source) < 9)
+			return (((int) date('Y', $source)) - 1).' - '.date('Y', $source);
+
+		return date('Y', $source).' - '.(((int) date('Y', $source)) + 1);
+	}
+
+	//
 	// lists forum categories
 	//
 	function categories() {
@@ -292,7 +302,7 @@ class forum {
 		// list subjects
 		//
 		$req = $this->root->sql->prepare('
-			SELECT s.*, u.nomreel, u.surnom
+			SELECT s.*, UNIX_TIMESTAMP(m.created) lastdate, u.nomreel, u.surnom
 			FROM cbs_forum_subjects s, cbs_forum_messages m, cbs_membres u
 			WHERE m.subject = s.id
 			  AND u.id = s.author
@@ -309,7 +319,21 @@ class forum {
 		if(count($data) == 0)
 			$this->error("Il n'y a aucun sujet dans cette catégorie pour l'instant", false);
 
+		$currentyear = $this->annual($data[0]['lastdate']);
+
 		foreach($data as $subject) {
+			// checking if we are still on the same time-period
+			$postyear = $this->annual($subject['lastdate']);
+			if($postyear != $currentyear) {
+				// adding period-separation
+				$currentyear = $postyear;
+
+				$this->layout->custom_add('TIME_PERIOD', $currentyear);
+				$this->layout->custom_append('FORUM',
+					$this->layout->parse_file_custom('layout/forum.period.layout.html')
+				);
+			}
+
 			$this->layout->custom_add('CUSTOM_ID', $subject['id']);
 			$this->layout->custom_add('CUSTOM_URL', $this->root->urlstrip($subject['id'], $subject['subject']));
 			$this->layout->custom_add('CUSTOM_TITLE', $subject['subject']);
