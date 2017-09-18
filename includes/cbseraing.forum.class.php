@@ -328,7 +328,7 @@ class forum {
 			);
 		}
 
-		if($this->root->connected() && $acl['write']) {
+		if($newenabled) {
 			$this->layout->custom_add('CUSTOM_CATEGORY_ID', $category);
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.newpost.layout.html')
@@ -377,14 +377,14 @@ class forum {
 		$this->layout->breadcrumb_add(null, $subject['subject']);
 
 		//
-		//Build upper "add message" button
+		// Build upper "add message" button
 		//
-
-		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
-			<div class="text-right" style="margin-top: 0;">
+		$newenabled = ($this->root->connected() && $subject['write']);
+		$newmessage = '<div class="text-right" style="margin-top: 0;">
 			<button class="btn btn-primary btn-newpost" href="#newpost">Ajouter un message</button>
-			</div>
-		');
+			</div>';
+
+		$this->layout->custom_add('GOTONEWMESSAGE', $newenabled ? $newmessage : '');
 
 		$this->layout->set('title', $subject['subject']);
 
@@ -538,7 +538,7 @@ class forum {
 		//
 		// reply form and post-read actions
 		//
-		if($this->root->connected() && $subject['write']) {
+		if($newenabled) {
 			$this->layout->custom_add('CUSTOM_SUBJECT_ID', $subject['id']);
 			$this->layout->custom_add('NEWITEM',
 				$this->layout->parse_file_custom('layout/forum.reply.layout.html')
