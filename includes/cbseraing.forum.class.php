@@ -213,10 +213,7 @@ class forum {
 		// empty breadcrumb
 		//
 		$this->layout->breadcrumb_add(null, 'Forum');
-
-		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
-
-		');
+		$this->layout->custom_add('GOTONEWMESSAGE', '');
 
 		//
 		// lists categories
@@ -282,13 +279,14 @@ class forum {
 		$this->layout->breadcrumb_add(null, $acl['nom']);
 
 		//
-		//Build upper "add message" button
+		// Build upper "add message" button
 		//
-		$this->layout->custom_add('GOTONEWMESSAGE', !$this->root->connected() ? '' : '
-			<div class="text-right" style="margin-top: 0;">
+		$newenabled = ($this->root->connected() && $acl['write']);
+		$newmessage = '<div class="text-right" style="margin-top: 0;">
 			<button class="btn btn-primary btn-newsubject" href="#subjectadd">Créer un nouveau sujet</button>
-			</div>
-		');
+			</div>';
+
+		$this->layout->custom_add('GOTONEWMESSAGE', $newenabled ? $newmessage : '');
 
 		//
 		// list subjects
