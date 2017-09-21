@@ -557,9 +557,11 @@ class cbseraing {
 			}
 
 			while(($event = $this->sql->fetch($req))) {
+				$when = strftime('Le %A %e %B %Y à %Hh%M', $event['udate']);
+
 				$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
 				$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
-				$this->layout->custom_add('CUSTOM_DATE', 'Le '.date('d/m/Y', $event['udate']));
+				$this->layout->custom_add('CUSTOM_DATE', $when);
 				$this->layout->custom_add('CUSTOM_THEME', $event['theme'] ? $event['theme'] : '(nope)');
 
 				$this->layout->container_append(
