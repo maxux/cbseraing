@@ -1,18 +1,26 @@
 <div class="row">
     <h2>{{CUSTOM_TITLE}}</h2>
 
-    <div class="col-md-4">
-        <h3 class="block">Quand ?</h3>
-        {{CUSTOM_DATE}}
+    <div class="visible-md visible-lg">
+        <div class="col-md-4">
+            <h3 class="block">Quand ?</h3>
+            Le {{CUSTOM_DATE}}
+        </div>
+
+        <div class="col-md-4 text-center">
+            <h3 class="block">Où ?</h3>
+            {{CUSTOM_LOCATION}}
+        </div>
+
+        <div class="col-md-4 text-right">
+            <h3 class="block">Thème ?</h3>
+            {{CUSTOM_THEME}}
+        </div>
     </div>
 
-    <div class="col-md-4 text-center">
-        <h3 class="block">Où ?</h3>
-        {{CUSTOM_LOCATION}}
-    </div>
-
-    <div class="col-md-4 text-right">
-        <h3 class="block">Thème ?</h3>
-        {{CUSTOM_THEME}}
+    <div class="visible-xs visible-sm">
+        <p>Le <span class="text-primary">{{CUSTOM_DATE}}</span></p>
+        <p>Lieu: <span class="text-info">{{CUSTOM_LOCATION}}</span></p>
+        <p>Thème: {{CUSTOM_THEME}}</p>
     </div>
 </div>

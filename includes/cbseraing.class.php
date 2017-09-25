@@ -557,7 +557,7 @@ class cbseraing {
 			}
 
 			while(($event = $this->sql->fetch($req))) {
-				$when = strftime('Le %A %e %B %Y à %Hh%M', $event['udate']);
+				$when = strftime('%A %e %B %Y à %Hh%M', $event['udate']);
 
 				$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
 				$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
