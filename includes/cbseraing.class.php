@@ -536,30 +536,34 @@ class cbseraing {
 	function agenda() {
 		$localUserType = $this->usertype();
 
+		if(!$this->connected()) {
+			$this->layout->container_append('{{ERRORS}}');
+			return $this->layout->error_append('L\'agenda n\'est actuellement pas public.');
+		}
+
 		if($localUserType == 0) {
 			$this->layout->container_append('{{ERRORS}}');
 			return $this->layout->error_append('Bien tenté bleu, mais ton avenir te restera inconnu...');
+		}
 
-		} else {
-			$req = $this->sql->query('SELECT *, UNIX_TIMESTAMP(date_ev) udate FROM cbs_agenda WHERE date_ev >= DATE(NOW())');
+		$req = $this->sql->query('SELECT *, UNIX_TIMESTAMP(date_ev) udate FROM cbs_agenda WHERE date_ev >= DATE(NOW())');
 
-			if($req->num_rows == 0) {
-				$this->layout->container_append('{{ERRORS}}');
-				return $this->layout->error_append("Rien de prévu pour l'instant");
-			}
+		if($req->num_rows == 0) {
+			$this->layout->container_append('{{ERRORS}}');
+			return $this->layout->error_append("Rien de prévu pour l'instant");
+		}
 
-			while(($event = $this->sql->fetch($req))) {
-				$when = strftime('%A %e %B %Y à %Hh%M', $event['udate']);
+		while(($event = $this->sql->fetch($req))) {
+			$when = strftime('%A %e %B %Y à %Hh%M', $event['udate']);
 
-				$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
-				$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
-				$this->layout->custom_add('CUSTOM_DATE', $when);
-				$this->layout->custom_add('CUSTOM_THEME', $event['theme'] ? $event['theme'] : '(nope)');
+			$this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
+			$this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
+			$this->layout->custom_add('CUSTOM_DATE', $when);
+			$this->layout->custom_add('CUSTOM_THEME', $event['theme'] ? $event['theme'] : '(nope)');
 
-				$this->layout->container_append(
-					$this->layout->parse_file_custom('layout/agenda.layout.html')
-				);
-			}
+			$this->layout->container_append(
+				$this->layout->parse_file_custom('layout/agenda.layout.html')
+			);
 		}
 	}
 
