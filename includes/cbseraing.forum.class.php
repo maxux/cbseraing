@@ -5,7 +5,7 @@ class forum {
 	private $root;
 	private $layout;
 	private $type;
-	private $redis;
+	private $redis = null;
 
 	// posts per page
 	private $ppp = 15;
@@ -31,9 +31,6 @@ class forum {
 
 		$this->layout->set('header', 'Le forum:');
 		$this->type = $this->root->usertype();
-
-		$this->redis = new \Redis();
-		$this->redis->connect('127.0.0.1');
 
 		//
 		// checking if there is unread post
@@ -186,6 +183,17 @@ class forum {
 	// dispatch notifications
 	//
 	private function push($payload) {
+		// if notifications are not enabled, skipping
+		if(!config::$notifications)
+			return;
+
+		// connect to redis if not already done
+		if(!$self->redis) {
+			$this->redis = new \Redis();
+			$this->redis->connect('127.0.0.1');
+		}
+
+		// pushing notification
 		try {
 			$this->redis->publish('cbs-push', json_encode($payload));
 
