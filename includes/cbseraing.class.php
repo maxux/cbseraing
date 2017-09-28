@@ -415,14 +415,6 @@ class cbseraing {
 		}
 
 		//
-		// easter egg: fake sql injection
-		//
-		if(is_string($type) && $type[0] == "'")
-			die("Bravo, tu as trouvé la « faille » d'injection SQL !
-			    Tu peux maintenant aller affoner Maxux et recevoir ta signature :D");
-
-
-		//
 		// grabbing users from their type
 		//
 		$req = $this->sql->prepare('
