@@ -224,6 +224,35 @@ div.error {
 	width: 100%;
 }
 
+/*
+ * Message wrapper for markdown
+ */
+.message h1 {
+    margin-bottom: 0;
+}
+
+.message h2 {
+    height: auto;
+    margin: 20px 0;
+    text-align: left;
+    line-height: 1.1;
+    font-size: 22px;
+    background: none;
+    color: #000000;
+}
+
+.message h3 {
+    font-size: 18px;
+}
+
+.message code {
+    padding: 3px 5px;
+}
+
+/*
+ * Profile
+ */
+
 div.stars {
 	margin-top: 15px;
 	font-size: 30px;
