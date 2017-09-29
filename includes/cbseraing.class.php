@@ -717,7 +717,11 @@ class cbseraing {
 	}
 
 	function contact() {
-		$this->layout->custom_add('CONTACT_NUMBER', $this->variable('contact'));
+    $this->layout->custom_add('CONTACT_NUMBER', $this->variable('contact'));
+    $this->layout->custom_add('EMAIL_PRESI', $this->variable('email_presidence'));
+    $this->layout->custom_add('EMAIL_WEB', $this->variable('email_webmaster'));
+    $this->layout->custom_add('HREF_EMAIL_PRESI', "mailto:".$this->variable('email_presidence'));
+    $this->layout->custom_add('HREF_EMAIL_WEB', "mailto:".$this->variable('email_webmaster'));
 		$this->layout->file('layout/contact.layout.html');
 	}
 
