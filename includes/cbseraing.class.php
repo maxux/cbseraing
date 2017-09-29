@@ -11,6 +11,7 @@ include('cbseraing.sql.class.php');
 include('cbseraing.forum.class.php');
 include('cbseraing.gallery.class.php');
 include('cbseraing.ajax.class.php');
+include('external.parsedown.php');
 
 class cbseraing {
 	private $profile  = 'photos/profile/';

@@ -28,6 +28,7 @@ class forum {
 	function __construct($root, $layout) {
 		$this->root = $root;
 		$this->layout = $layout;
+		$this->parsedown = new \Parsedown();
 
 		$this->layout->set('header', 'Le forum:');
 		$this->type = $this->root->usertype();
@@ -528,7 +529,18 @@ class forum {
 			$this->layout->custom_add('CUSTOM_EXTRA_HEADER', '');
 			$this->layout->custom_add('CUSTOM_ID', $message['id']);
 			$this->layout->custom_add('CUSTOM_PLAIN_TEXT', $message['message']);
-			$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
+
+			// original bbcode
+			if($message['format'] == 'bbcode') {
+				$this->layout->custom_add('CUSTOM_MESSAGE', $this->bbdecode($message['message']));
+
+			// markdown
+			} else if($message['format'] == 'markdown') {
+				$this->layout->custom_add('CUSTOM_MESSAGE', $this->parsedown->text($message['message']));
+
+			// plain/text
+			} else $this->layout->custom_add('CUSTOM_MESSAGE', $message['message']);
+
 			$this->layout->custom_add('CUSTOM_DATE', $message['created']);
 			$this->layout->custom_add('CUSTOM_PICTURE', $this->root->picture($message['picture']));
 
