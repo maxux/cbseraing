@@ -498,6 +498,14 @@ class forum {
 				$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 				$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
 
+				if($message['type'] != 0) {
+					$seenby = $this->seenby($message['id'], 0);
+					$seenint = count($seenby);
+
+					$this->layout->custom_add('CUSTOM_SEENBY', 'Vu par '.$seenint.' Bleu'.(($seenint > 1) ? 's' : ''));
+
+				} else $this->layout->custom_add('CUSTOM_SEENBY', '');
+
 				$this->layout->custom_append('FORUM',
 					$this->layout->parse_file_custom(
 						'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
