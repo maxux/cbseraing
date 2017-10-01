@@ -75,7 +75,6 @@ class forum {
 			$this->noitem();
 			return false;
 		}
-
 	}
 
 	//
@@ -565,6 +564,14 @@ class forum {
 			$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 			$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
 
+			if($message['type'] != 0) {
+				$seenby = $this->seenby($message['id'], 0);
+				$seenint = count($seenby);
+
+				$this->layout->custom_add('CUSTOM_SEENBY', 'Vu par '.$seenint.' Bleu'.(($seenint > 1) ? 's' : ''));
+
+			} else $this->layout->custom_add('CUSTOM_SEENBY', '');
+
 			$this->layout->custom_append('FORUM',
 				$this->layout->parse_file_custom(
 					'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
@@ -738,6 +745,19 @@ class forum {
 
 	function unreads() {
 		return count($this->unread['messages']);
+	}
+
+	//
+	// seen-by feature
+	//
+	function seenby($postid, $type) {
+		$req = $this->root->sql->prepare('
+			SELECT m.id, m.nomreel FROM cbs_forum_read r, cbs_membres m
+			WHERE r.uid = m.id AND m.type = ? AND r.mid = ?
+		');
+
+		$req->bind_param('ii', $type, $postid);
+		return $this->root->sql->exec($req);
 	}
 }
 ?>
