@@ -498,7 +498,7 @@ class forum {
 				$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 				$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
 
-				if($message['type'] != 0) {
+				if($message['type'] != 0 && $category['id'] == 8) {
 					$seenby = $this->seenby($message['id'], 0);
 					$seenint = count($seenby);
 
@@ -572,7 +572,7 @@ class forum {
 			$this->layout->custom_add('CUSTOM_EDIT', $this->request('edit', $message));
 			$this->layout->custom_add('CUSTOM_HIDE', $this->request('hide', $message));
 
-			if($message['type'] != 0) {
+			if($message['type'] != 0 && $category['id'] == 8) {
 				$seenby = $this->seenby($message['id'], 0);
 				$seenint = count($seenby);
 
