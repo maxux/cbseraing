@@ -699,7 +699,7 @@ class forum {
 	function reply($subject, $author, $content, $format) {
 		$req = $this->root->sql->prepare('
 			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden, format)
-			VALUES (?, ?, NOW(), ?, 0)
+			VALUES (?, ?, NOW(), ?, 0, ?)
 		');
 
 		$req->bind_param('iiss', $subject, $author, $content, $format);

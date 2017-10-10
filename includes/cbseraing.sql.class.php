@@ -24,7 +24,7 @@ class sql {
 	function prepare($sql) {
 		if(!($req = $this->mysqli->prepare($sql))) {
 			if($this->prod)
-				die('SQL (query) Error, please contact administrator');
+				die('SQL (prepare) Error, please contact administrator');
 
 			else echo 'SQL (prepare) Error <!-- '.$sql.' -->: '.$this->mysqli->error;
 		}
@@ -35,7 +35,7 @@ class sql {
 	function exec($stmt) {
 		if(!($req = $stmt->execute())) {
 			if($this->prod)
-				die('SQL (query) Error, please contact administrator');
+				die('SQL (exec) Error, please contact administrator');
 
 			else echo 'SQL (exec) Error:'.$this->mysqli->error;
 		}
