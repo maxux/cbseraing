@@ -953,7 +953,7 @@ class cbseraing {
 
 			// create subject and post original message
 			$subject = $this->forum->create($_POST['category'], $_SESSION['uid'], $_POST['subject']);
-			$this->forum->reply($subject, $_SESSION['uid'], $_POST['message']);
+			$this->forum->reply($subject, $_SESSION['uid'], $_POST['message'], $_POST['format']);
 
 			header('Location: /forum/subject/'.$this->urlstrip($subject, $_POST['subject']));
 		}
