@@ -233,12 +233,19 @@ class cbseraing {
 				return in_array($this->user['type'], $allowed);
 			break;
 
-			case 'comite':
+			case 'comite-header':
 				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true);
 				return isset($allowed[$option]);
 			break;
 
+			case 'comite-acl':
+				// disallow 'blue' page for guests
+				if($option == 0 && !$this->connected())
+					return false;
 
+				// allows all the others
+				return true;
+			break;
 		}
 	}
 
@@ -387,7 +394,7 @@ class cbseraing {
 	// format layout and display a user information block
 	//
 	function user($user) {
-		if(!$this->allowed('comite', $user['type']))
+		if(!$this->allowed('comite-header', $user['type']))
 			$this->layout->set('header', 'Nos amis:');
 
 		$this->layout->custom_add('CUSTOM_MEMBER_ID', $user['id']);
@@ -410,10 +417,13 @@ class cbseraing {
 	// list all members with a specific type
 	//
 	function comite($type, $comite = 1) {
-		if(!$this->allowed('comite', $type)) {
+		if(!$this->allowed('comite-header', $type)) {
 			$this->layout->set('header', 'Nos amis:');
 			$comite = 0;
 		}
+
+		if(!$this->allowed('comite-acl', $type))
+			return $this->layout->error_append('Vous devez être connecté pour voir ces membres');
 
 		//
 		// grabbing users from their type
@@ -455,6 +465,9 @@ class cbseraing {
 	function membre($id) {
 		if(!($user = $this->userdata($id)))
 			return $this->layout->error_append('Membre introuvable');
+
+		if($user['type'] == 0 && !$this->connected())
+			return $this->layout->error_append('Vous devez être connecté pour voir ce membre');
 
 		$this->user($user);
 	}
