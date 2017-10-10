@@ -173,6 +173,7 @@ class forum {
 		$this->layout->custom_add('CUSTOM_MESSAGE', $message['message']);
 		$this->layout->custom_add('CUSTOM_MESSAGE_ID', $id);
 		$this->layout->custom_add('NEWITEM', '');
+		$this->layout->custom_add('GOTONEWMESSAGE', '');
 
 		$this->layout->custom_append('FORUM',
 			$this->layout->parse_file_custom('layout/forum.edit.layout.html')
