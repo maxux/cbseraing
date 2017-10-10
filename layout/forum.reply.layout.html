@@ -5,8 +5,15 @@
 		<input type="hidden" name="subject" value="{{CUSTOM_SUBJECT_ID}}" />
 
 		<div class="form-group">
-			<label for="message">Message <a href="" data-toggle="modal" data-target="#balises">(voir les balises)</a></label>
+			<label for="message">Message <a href="" data-toggle="modal" data-target="#balises">(voir les balises bbcode)</a></label>
 			<textarea class="form-control forumtext" id="message" name="message" style="height: 200px;"></textarea>
+		</div>
+		<div class="form-group pull-right">
+			<label for="format">Format</label>
+			<select name="format">
+				<option value="bbcode" selected>bbcode (par défaut)</option>
+				<option value="markdown">Markdown</option>
+			</select>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Répondre</button>
@@ -20,7 +27,7 @@
 			<button type="button" class="close" data-dismiss="modal">
 				<span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span>
 			</button>
-			<h4 class="modal-title">Les balises de formatage</h4>
+			<h4 class="modal-title">Les balises de formatage bbcode</h4>
 		</div>
 		<div class="modal-body">
 <pre>

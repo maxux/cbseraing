@@ -696,13 +696,13 @@ class forum {
 		return $req->insert_id;
 	}
 
-	function reply($subject, $author, $content) {
+	function reply($subject, $author, $content, $format) {
 		$req = $this->root->sql->prepare('
-			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden)
+			INSERT INTO cbs_forum_messages (subject, author, created, message, hidden, format)
 			VALUES (?, ?, NOW(), ?, 0)
 		');
 
-		$req->bind_param('iis', $subject, $author, $content);
+		$req->bind_param('iiss', $subject, $author, $content, $format);
 		$this->root->sql->exec($req);
 
 		$mesreq = $this->root->sql->prepare('SELECT * FROM cbs_forum_subjects s WHERE s.id = ?');

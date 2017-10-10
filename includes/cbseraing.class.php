@@ -955,8 +955,11 @@ class cbseraing {
 			if(!isset($_POST['subject']) || $_POST['subject'] == '')
 				return $this->layout->error_append("Erreur de sujet");
 
+			if(!isset($_POST['format']) || $_POST['format'] == '')
+				$_POST['format'] = 'bbcode';
+
 			// post reply
-			$subject = $this->forum->reply($_POST['subject'], $_SESSION['uid'], $_POST['message']);
+			$subject = $this->forum->reply($_POST['subject'], $_SESSION['uid'], $_POST['message'], $_POST['format']);
 
 			header('Location: /forum/subject/'.$this->urlstrip($_POST['subject'], $subject['subject']));
 		}
