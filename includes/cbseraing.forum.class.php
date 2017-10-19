@@ -620,6 +620,9 @@ class forum {
 		if(!$this->root->connected())
 			return;
 
+		if(count($messages) == 0)
+			return;
+
 		//
 		// updating read flags
 		// note: select all messages from this page and remove already-read message
