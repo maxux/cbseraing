@@ -594,7 +594,10 @@ class forum {
 		//
 		// pages
 		//
-		$req = $this->root->sql->prepare('SELECT COUNT(*) c FROM cbs_forum_messages msg WHERE msg.subject = ?');
+		$req = $this->root->sql->prepare('
+			SELECT COUNT(*) c FROM cbs_forum_messages msg
+			WHERE msg.subject = ? AND msg.author IS NOT NULL
+		');
 		$req->bind_param('i', $subject['id']);
 		$data = $this->root->sql->exec($req);
 
