@@ -519,7 +519,7 @@ class forum {
 		// messages list
 		//
 		$req = $this->root->sql->prepare('
-			SELECT msg.*, m.nomreel, m.surnom, m.picture, m.id authorid, m.type
+			SELECT msg.*, m.nomreel, m.surnom, m.picture, m.id authorid, m.type, m.comite
 			FROM cbs_forum_messages msg, cbs_membres m
 			WHERE msg.subject = ?
 			  AND m.id = msg.author
@@ -535,10 +535,15 @@ class forum {
 		$unread = NULL;
 
 		foreach($data as $message) {
-			$this->layout->custom_add('CUSTOM_STATUS',
-				(isset($this->unread['messages'][$message['id']]) ? 'active' : 'inactive').
-				(($message['type'] == 0) ? ' bleus-forum' : '')
-			);
+			$status = (isset($this->unread['messages'][$message['id']]) ? 'active' : 'inactive');
+
+			if($message['type'] == 0)
+				$status .= ' bleus-forum';
+
+			if($message['type'] == 0 && $message['comite'] == 0)
+				$status .= ' forum-wasted';
+
+			$this->layout->custom_add('CUSTOM_STATUS', $status);
 
 			$messages[] = $message['id'];
 
@@ -581,11 +586,12 @@ class forum {
 
 			} else $this->layout->custom_add('CUSTOM_SEENBY', '');
 
-			$this->layout->custom_append('FORUM',
-				$this->layout->parse_file_custom(
-					'layout/forum.message.'.(($message['hidden']) ? 'hidden.' : '').'layout.html'
-				)
-			);
+			$layout = 'layout/forum.message.layout.html';
+
+			if($message['hidden'])
+				$layout = 'layout/forum.message.hidden.layout.html';
+
+			$this->layout->custom_append('FORUM', $this->layout->parse_file_custom($layout));
 		}
 
 		$this->layout->custom_add('CUSTOM_ID', $unread);

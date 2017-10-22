@@ -393,7 +393,7 @@ class cbseraing {
 	//
 	// format layout and display a user information block
 	//
-	function user($user) {
+	function user($user, $suffix = '') {
 		if(!$this->allowed('comite-header', $user['type']))
 			$this->layout->set('header', 'Nos amis:');
 
@@ -409,14 +409,14 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
 
 		$this->layout->container_append(
-			$this->layout->parse_file_custom('layout/comite.list.layout.html')
+			$this->layout->parse_file_custom('layout/comite.list'.$suffix.'.layout.html')
 		);
 	}
 
 	//
 	// list all members with a specific type
 	//
-	function comite($type, $comite = 1) {
+	function comite($type, $comite = 1, $silent = false) {
 		if(!$this->allowed('comite-header', $type)) {
 			$this->layout->set('header', 'Nos amis:');
 			$comite = 0;
@@ -452,11 +452,17 @@ class cbseraing {
 
 		$final = array_merge($data1, $data2);
 
-		if(count($final) == 0 || isset($this->skiptypes[$type]))
+		if(!$silent && (count($final) == 0 || isset($this->skiptypes[$type])))
 			return $this->layout->error_append('Personne pour le moment');
 
+		$suffix = ($type == 0 && $comite == 0) ? '.wasted' : '';
+
 		foreach($final as $user)
-			$this->user($user);
+			$this->user($user, $suffix);
+
+		// adding wasted blue
+		if($type == 0 && $comite == 1)
+			$this->comite($type, 0, true);
 	}
 
 	//
