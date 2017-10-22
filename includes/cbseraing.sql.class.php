@@ -59,6 +59,13 @@ class sql {
 		return $results;
 	}
 
+	function count($sql) {
+		$req = $this->prepare($sql);
+		$data = $this->exec($req);
+
+		return $req->num_rows;
+	}
+
 	function fetch($req) {
 		return $req->fetch_assoc();
 	}

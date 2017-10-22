@@ -686,6 +686,16 @@ class cbseraing {
 		$news = $this->news(1);
 		$news = $news[0];
 
+		// counter
+		$was = $this->sql->count('SELECT id FROM cbs_membres WHERE type = 0');
+		$this->layout->custom_add('CUSTOM_COUNTER_WAS', $was);
+
+		$now = $this->sql->count('SELECT id FROM cbs_membres WHERE type = 0 AND comite = 1');
+		$this->layout->custom_add('CUSTOM_COUNTER_NOW', $now);
+
+		$this->layout->file('layout/home.counter.layout.html');
+
+		// home-page
 		$intro = ($news['utime'] < time()) ? 'Dernier évènement' : 'Prochain évènement';
 		$when = strftime('Le %A %e %B %Y à %Hh%M', $news['utime']);
 
