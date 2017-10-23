@@ -362,11 +362,11 @@ class cbseraing {
 		";
 
 		if ($result = $this->sql->query($query)) {
-				while ($row = $this->sql->fetch($result)) {
-					$fonctions[$row['year']] = $row['fonction'];
-				}
+			while ($row = $this->sql->fetch($result)) {
+				$fonctions[$row['year']] = $row['fonction'];
+			}
 
-				$result->free();
+			$result->free();
 		}
 
 		return $fonctions;
@@ -442,7 +442,7 @@ class cbseraing {
 		$fonctions = $this->fonctions($user['id']);
 
 		//
-		//Save current "fonction" and remove it from the array
+		// Save current "fonction" and remove it from the array
 		//
 		if(isset($fonctions[date("Y")])){
 			$current_fonction = $fonctions[date("Y")];
@@ -464,7 +464,7 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_RANG', $user['fonction']);
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
 		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
-		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : '"hidden"');
+		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : 'hidden');
 
 		$this->layout->container_append(
 			$this->layout->parse_file_custom('layout/comite.list'.$suffix.'.layout.html')
@@ -490,12 +490,12 @@ class cbseraing {
 		//
 		foreach($years as $year) {
 			$req = $this->sql->prepare('
-			SELECT m.id, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
-			FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
-			WHERE mf.id_member = m.id
-			AND mf.id_fonction = f.id
-			AND mf.year = ?
-			ORDER BY mf.id_fonction ASC
+				SELECT m.id, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
+				FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
+				WHERE mf.id_member = m.id
+				AND mf.id_fonction = f.id
+				AND mf.year = ?
+				ORDER BY mf.id_fonction ASC
 			');
 
 			$req->bind_param('i', $year['year']);
@@ -531,10 +531,8 @@ class cbseraing {
 		//
 		// The sub selected is "Anciens comités"
 		//
-		if($type == 7) {
-			$this->oldcomite();
-			return;
-		}
+		if($type == 7)
+			return $this->oldcomite();
 
 		//
 		// grabbing users from their type
@@ -647,7 +645,7 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_BAPTEME', $user['anbapt']);
 		$this->layout->custom_add('CUSTOM_BAPTISE', $this->baptise($user['anbapt'], $user['type']));
 		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
-		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : '"hidden"');
+		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : 'hidden');
 
 		if($edit) {
 			if($user['sexe'] == 'M') {
