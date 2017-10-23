@@ -234,7 +234,7 @@ class cbseraing {
 			break;
 
 			case 'comite-header':
-				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true);
+				$allowed = array(0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true, 7 => true);
 				return isset($allowed[$option]);
 			break;
 
@@ -348,6 +348,48 @@ class cbseraing {
 	}
 
 	//
+	// return all 'fonction' of a user by year
+	//
+	function fonctions($id) {
+		$fonctions = NULL;
+
+		$query = "SELECT mf.year, CASE WHEN m.sexe = 'M' THEN GROUP_CONCAT(f.fonction SEPARATOR ', ') ELSE GROUP_CONCAT(f.feminin SEPARATOR ', ') END as fonction
+			FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
+			WHERE mf.id_member = m.id
+			AND mf.id_fonction = f.id
+			AND m.id = ".$id."
+			GROUP BY mf.year
+		";
+
+		if ($result = $this->sql->query($query)) {
+				while ($row = $this->sql->fetch($result)) {
+					$fonctions[$row['year']] = $row['fonction'];
+				}
+
+				$result->free();
+		}
+
+		return $fonctions;
+	}
+
+	//
+	// return all old 'fonction' to display them in a list
+	//
+	function oldfonctions($fonctions) {
+		if(isset($fonctions)){
+			$output = implode('<br/>', array_map(
+				function ($v, $k) { return sprintf("%s - %s : %s", $k, $k+1, $v); },
+				$fonctions,
+				array_keys($fonctions)
+			));
+		} else {
+			$output = '';
+		}
+
+		return $output;
+	}
+
+	//
 	// return 'année baptême' if set and if not 'bleu'
 	//
 	function baptise($date, $type) {
@@ -397,6 +439,20 @@ class cbseraing {
 		if(!$this->allowed('comite-header', $user['type']))
 			$this->layout->set('header', 'Nos amis:');
 
+		$fonctions = $this->fonctions($user['id']);
+
+		//
+		//Save current "fonction" and remove it from the array
+		//
+		if(isset($fonctions[date("Y")])){
+			$current_fonction = $fonctions[date("Y")];
+			unset($fonctions[date("Y")]);
+		}
+		else
+			$current_fonction = '';
+
+		$oldfonctions = $this->oldfonctions($fonctions);
+
 		$this->layout->custom_add('CUSTOM_MEMBER_ID', $user['id']);
 		$this->layout->custom_add('CUSTOM_MEMBER_URL', $this->urlslash($user['id'], $this->shortname($user)));
 		$this->layout->custom_add('CUSTOM_NAME', $this->username($user));
@@ -407,10 +463,57 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ETUDES', nl2br($user['etudes']));
 		$this->layout->custom_add('CUSTOM_RANG', $user['fonction']);
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
+		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
+		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : '"hidden"');
 
 		$this->layout->container_append(
 			$this->layout->parse_file_custom('layout/comite.list'.$suffix.'.layout.html')
 		);
+	}
+
+	//
+	// list all old committees
+	//
+	function oldcomite() {
+		$req = $this->sql->prepare('
+			SELECT year
+			FROM cbs_member_fonction
+			WHERE year < EXTRACT(YEAR FROM CURRENT_DATE)
+			GROUP BY year
+			ORDER BY year DESC
+		');
+
+		$years = $this->sql->exec($req);
+
+		//
+		// Display year by year each comittee
+		//
+		foreach($years as $year) {
+			$req = $this->sql->prepare('
+			SELECT m.id, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
+			FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
+			WHERE mf.id_member = m.id
+			AND mf.id_fonction = f.id
+			AND mf.year = ?
+			ORDER BY mf.id_fonction ASC
+			');
+
+			$req->bind_param('i', $year['year']);
+			$oldcommittee = $this->sql->exec($req);
+
+			$table_line = '';
+			foreach($oldcommittee as $person) {
+				$url = $this->urlslash($person['id'], $this->shortname($person));
+				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
+			}
+
+			$this->layout->custom_add('CUSTOM_TABLE', $table_line);
+			$this->layout->custom_add('CUSTOM_YEAR', $year['year']);
+
+			$this->layout->container_append(
+				$this->layout->parse_file_custom('layout/comite.old.layout.html')
+			);
+		}
 	}
 
 	//
@@ -424,6 +527,14 @@ class cbseraing {
 
 		if(!$this->allowed('comite-acl', $type))
 			return $this->layout->error_append('Vous devez être connecté pour voir ces membres');
+
+		//
+		// The sub selected is "Anciens comités"
+		//
+		if($type == 7) {
+			$this->oldcomite();
+			return;
+		}
 
 		//
 		// grabbing users from their type
@@ -509,6 +620,16 @@ class cbseraing {
 	function profile($edit = false) {
 		$user = $this->userdata($_SESSION['uid']);
 
+		$fonctions = $this->fonctions($user['id']);
+
+		//
+		//Remove current "fonction" from the array
+		//
+		if(isset($fonctions[date("Y")]))
+			unset($fonctions[date("Y")]);
+
+		$oldfonctions = $this->oldfonctions($fonctions);
+
 		$this->layout->custom_add('CUSTOM_MEMBER_ID', $user['id']);
 		$this->layout->custom_add('CUSTOM_NAME', $this->username($user));
 		$this->layout->custom_add('CUSTOM_PICTURE', $this->picture($user['picture']));
@@ -525,10 +646,20 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ETOILES_PLAIN', $user['etoiles']);
 		$this->layout->custom_add('CUSTOM_BAPTEME', $user['anbapt']);
 		$this->layout->custom_add('CUSTOM_BAPTISE', $this->baptise($user['anbapt'], $user['type']));
+		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
+		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : '"hidden"');
 
-		if($edit)
+		if($edit) {
+			if($user['sexe'] == 'M') {
+				$this->layout->custom_add('CUSTOM_HOMME', 'selected="selected"');
+				$this->layout->custom_add('CUSTOM_FEMME', '');
+			} else {
+				$this->layout->custom_add('CUSTOM_FEMME', 'selected="selected"');
+				$this->layout->custom_add('CUSTOM_HOMME', '');
+			}
+
 			$this->layout->file('layout/profile.edit.layout.html');
-
+		}
 		else $this->layout->file('layout/profile.layout.html');
 	}
 
@@ -911,7 +1042,7 @@ class cbseraing {
 		if($_GET['page'] == 'settings' && isset($_GET['save'])) {
 			$req = $this->sql->prepare('
 				UPDATE cbs_membres SET
-				surnom = ?, nomreel = ?, actu = ?, etoiles = ?, anbapt = ?, titres = ?, etudes = ?
+				surnom = ?, nomreel = ?, sexe = ?, actu = ?, etoiles = ?, anbapt = ?, titres = ?, etudes = ?
 				WHERE id = ?
 			');
 
@@ -922,9 +1053,10 @@ class cbseraing {
 				return;
 			}
 
-			$req->bind_param('ssssissi',
+			$req->bind_param('sssssissi',
 				$_POST['surnom'],
 				$_POST['nomreel'],
+				$_POST['sexe'],
 				$_POST['actu'],
 				$_POST['etoiles'],
 				$_POST['bapteme'],
