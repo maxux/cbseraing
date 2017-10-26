@@ -461,7 +461,7 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ACTUELLEMENT', $user['actu']);
 		$this->layout->custom_add('CUSTOM_TITRES', nl2br($user['titres']));
 		$this->layout->custom_add('CUSTOM_ETUDES', nl2br($user['etudes']));
-		$this->layout->custom_add('CUSTOM_RANG', $user['fonction']);
+		$this->layout->custom_add('CUSTOM_RANG', $current_fonction);
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
 		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
 		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : 'hidden');
