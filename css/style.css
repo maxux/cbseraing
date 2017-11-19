@@ -450,6 +450,13 @@ li.newmessage a {
     margin: auto;
 }
 
+@media (min-width: 995px) {
+    .global-submenu {
+        height: 25px;
+        padding-top: 38px;
+    }
+}
+
 @media (max-width: 995px) {
     .clock-remain-root {
         width: 250px;
