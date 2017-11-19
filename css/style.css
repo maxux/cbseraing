@@ -459,11 +459,8 @@ li.newmessage a {
 
 @media (max-width: 995px) {
     .clock-remain-root {
-        width: 250px;
-        margin: auto;
-    }
-
-    .clock-remain {
-        zoom: 36%;
+	transform: scale(0.38);
+	transform-origin: 0 0;
+	margin-bottom: -70px;
     }
 }
