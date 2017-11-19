@@ -445,7 +445,18 @@ li.newmessage a {
 	font-size: 18px;
 }
 
+.clock-remain-root {
+    width: 650px;
+    margin: auto;
+}
 
-iframe body {
-	background: transparent;
+@media (max-width: 995px) {
+    .clock-remain-root {
+        width: 250px;
+        margin: auto;
+    }
+
+    .clock-remain {
+        zoom: 36%;
+    }
 }
