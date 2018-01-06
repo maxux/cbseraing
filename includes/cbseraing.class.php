@@ -359,6 +359,7 @@ class cbseraing {
 			AND mf.id_fonction = f.id
 			AND m.id = ".$id."
 			GROUP BY mf.year
+      ORDER BY mf.year DESC
 		";
 
 		if ($result = $this->sql->query($query)) {
@@ -388,6 +389,13 @@ class cbseraing {
 
 		return $output;
 	}
+
+  function school_year(){
+    if(date("m") >= 9)
+      return date("Y");
+    else
+      return date("Y")-1;
+  }
 
 	//
 	// return 'année baptême' if set and if not 'bleu'
@@ -444,9 +452,9 @@ class cbseraing {
 		//
 		// Save current "fonction" and remove it from the array
 		//
-		if(isset($fonctions[date("Y")])){
-			$current_fonction = $fonctions[date("Y")];
-			unset($fonctions[date("Y")]);
+		if(isset($fonctions[$this->school_year()])){
+			$current_fonction = $fonctions[$this->school_year()];
+			unset($fonctions[$this->school_year()]);
 		}
 		else
 			$current_fonction = '';
@@ -461,10 +469,10 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ACTUELLEMENT', $user['actu']);
 		$this->layout->custom_add('CUSTOM_TITRES', nl2br($user['titres']));
 		$this->layout->custom_add('CUSTOM_ETUDES', nl2br($user['etudes']));
-		$this->layout->custom_add('CUSTOM_RANG', $user['fonction']);
+		$this->layout->custom_add('CUSTOM_RANG', $current_fonction);
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
 		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
-		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : 'hidden');
+		$this->layout->custom_add('CUSTOM_OLD', is_array($fonctions) && count($fonctions) > 0 ? '' : 'hidden');
 
 		$this->layout->container_append(
 			$this->layout->parse_file_custom('layout/comite.list'.$suffix.'.layout.html')
@@ -623,8 +631,8 @@ class cbseraing {
 		//
 		//Remove current "fonction" from the array
 		//
-		if(isset($fonctions[date("Y")]))
-			unset($fonctions[date("Y")]);
+		if(isset($fonctions[$this->school_year()]))
+			unset($fonctions[$this->school_year()]);
 
 		$oldfonctions = $this->oldfonctions($fonctions);
 
