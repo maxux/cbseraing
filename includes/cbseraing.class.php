@@ -486,10 +486,13 @@ class cbseraing {
 		$req = $this->sql->prepare('
 			SELECT year
 			FROM cbs_member_fonction
-			WHERE year < EXTRACT(YEAR FROM CURRENT_DATE)
+			WHERE year < ?
 			GROUP BY year
 			ORDER BY year DESC
 		');
+
+    $current_school_year = $this->school_year();
+		$req->bind_param('i',$current_school_year);
 
 		$years = $this->sql->exec($req);
 
