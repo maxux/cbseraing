@@ -36,7 +36,8 @@ class cbseraing {
 	);
 
 	private $skiptypes = array(
-		5 => true
+		5 => true,
+    8 => true
 	);
 
 	function __construct($layout, $init = true) {
@@ -497,11 +498,11 @@ class cbseraing {
 		$years = $this->sql->exec($req);
 
 		//
-		// Display year by year each comittee
+		// Display year by year each comittee, member.type is used to separate registered and unregistered members
 		//
 		foreach($years as $year) {
 			$req = $this->sql->prepare('
-				SELECT m.id, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
+				SELECT m.id, m.type, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
 				FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
 				WHERE mf.id_member = m.id
 				AND mf.id_fonction = f.id
@@ -514,8 +515,13 @@ class cbseraing {
 
 			$table_line = '';
 			foreach($oldcommittee as $person) {
-				$url = $this->urlslash($person['id'], $this->shortname($person));
-				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
+        if($person['type'] != 8) { // != ancien_non_inscrit
+  				$url = $this->urlslash($person['id'], $this->shortname($person));
+  				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
+        }
+        else {
+          $table_line .= '<tr><td>'.$person['fonction'].'</td><td>'.$this->shortname($person).'</td></tr>';
+        }
 			}
 
 			$this->layout->custom_add('CUSTOM_TABLE', $table_line);
