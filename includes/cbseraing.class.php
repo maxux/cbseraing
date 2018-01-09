@@ -36,7 +36,8 @@ class cbseraing {
 	);
 
 	private $skiptypes = array(
-		5 => true
+		5 => true,
+		8 => true
 	);
 
 	function __construct($layout, $init = true) {
@@ -359,6 +360,7 @@ class cbseraing {
 			AND mf.id_fonction = f.id
 			AND m.id = ".$id."
 			GROUP BY mf.year
+			ORDER BY mf.year DESC
 		";
 
 		if ($result = $this->sql->query($query)) {
@@ -387,6 +389,13 @@ class cbseraing {
 		}
 
 		return $output;
+	}
+
+	function school_year(){
+		if(date("m") >= 9)
+			return date("Y");
+		else
+			return date("Y")-1;
 	}
 
 	//
@@ -444,9 +453,9 @@ class cbseraing {
 		//
 		// Save current "fonction" and remove it from the array
 		//
-		if(isset($fonctions[date("Y")])){
-			$current_fonction = $fonctions[date("Y")];
-			unset($fonctions[date("Y")]);
+		if(isset($fonctions[$this->school_year()])){
+			$current_fonction = $fonctions[$this->school_year()];
+			unset($fonctions[$this->school_year()]);
 		}
 		else
 			$current_fonction = '';
@@ -461,10 +470,10 @@ class cbseraing {
 		$this->layout->custom_add('CUSTOM_ACTUELLEMENT', $user['actu']);
 		$this->layout->custom_add('CUSTOM_TITRES', nl2br($user['titres']));
 		$this->layout->custom_add('CUSTOM_ETUDES', nl2br($user['etudes']));
-		$this->layout->custom_add('CUSTOM_RANG', $user['fonction']);
+		$this->layout->custom_add('CUSTOM_RANG', $current_fonction);
 		$this->layout->custom_add('CUSTOM_ETOILES', $this->stars($user['etoiles']));
 		$this->layout->custom_add('CUSTOM_FONCTIONS', $oldfonctions);
-		$this->layout->custom_add('CUSTOM_OLD', count($fonctions) > 0 ? '' : 'hidden');
+		$this->layout->custom_add('CUSTOM_OLD', is_array($fonctions) && count($fonctions) > 0 ? '' : 'hidden');
 
 		$this->layout->container_append(
 			$this->layout->parse_file_custom('layout/comite.list'.$suffix.'.layout.html')
@@ -478,19 +487,22 @@ class cbseraing {
 		$req = $this->sql->prepare('
 			SELECT year
 			FROM cbs_member_fonction
-			WHERE year < EXTRACT(YEAR FROM CURRENT_DATE)
+			WHERE year < ?
 			GROUP BY year
 			ORDER BY year DESC
 		');
 
+		$current_school_year = $this->school_year();
+		$req->bind_param('i',$current_school_year);
+
 		$years = $this->sql->exec($req);
 
 		//
-		// Display year by year each comittee
+		// Display year by year each comittee, member.type is used to separate registered and unregistered members
 		//
 		foreach($years as $year) {
 			$req = $this->sql->prepare('
-				SELECT m.id, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
+				SELECT m.id, m.type, m.nomreel, m.surnom, CASE WHEN m.sexe = \'M\' THEN f.fonction ELSE f.feminin END as fonction
 				FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
 				WHERE mf.id_member = m.id
 				AND mf.id_fonction = f.id
@@ -503,8 +515,13 @@ class cbseraing {
 
 			$table_line = '';
 			foreach($oldcommittee as $person) {
-				$url = $this->urlslash($person['id'], $this->shortname($person));
-				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
+				if($person['type'] != 8) { // != ancien_non_inscrit
+  				$url = $this->urlslash($person['id'], $this->shortname($person));
+  				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
+				}
+				else {
+					$table_line .= '<tr><td>'.$person['fonction'].'</td><td>'.$this->shortname($person).'</td></tr>';
+				}
 			}
 
 			$this->layout->custom_add('CUSTOM_TABLE', $table_line);
@@ -623,8 +640,8 @@ class cbseraing {
 		//
 		//Remove current "fonction" from the array
 		//
-		if(isset($fonctions[date("Y")]))
-			unset($fonctions[date("Y")]);
+		if(isset($fonctions[$this->school_year()]))
+			unset($fonctions[$this->school_year()]);
 
 		$oldfonctions = $this->oldfonctions($fonctions);
 
