@@ -37,7 +37,7 @@ class cbseraing {
 
 	private $skiptypes = array(
 		5 => true,
-    8 => true
+		8 => true
 	);
 
 	function __construct($layout, $init = true) {
@@ -360,7 +360,7 @@ class cbseraing {
 			AND mf.id_fonction = f.id
 			AND m.id = ".$id."
 			GROUP BY mf.year
-      ORDER BY mf.year DESC
+			ORDER BY mf.year DESC
 		";
 
 		if ($result = $this->sql->query($query)) {
@@ -391,12 +391,12 @@ class cbseraing {
 		return $output;
 	}
 
-  function school_year(){
-    if(date("m") >= 9)
-      return date("Y");
-    else
-      return date("Y")-1;
-  }
+	function school_year(){
+		if(date("m") >= 9)
+			return date("Y");
+		else
+			return date("Y")-1;
+	}
 
 	//
 	// return 'année baptême' if set and if not 'bleu'
@@ -492,7 +492,7 @@ class cbseraing {
 			ORDER BY year DESC
 		');
 
-    $current_school_year = $this->school_year();
+		$current_school_year = $this->school_year();
 		$req->bind_param('i',$current_school_year);
 
 		$years = $this->sql->exec($req);
@@ -515,13 +515,13 @@ class cbseraing {
 
 			$table_line = '';
 			foreach($oldcommittee as $person) {
-        if($person['type'] != 8) { // != ancien_non_inscrit
+				if($person['type'] != 8) { // != ancien_non_inscrit
   				$url = $this->urlslash($person['id'], $this->shortname($person));
   				$table_line .= '<tr><td>'.$person['fonction'].'</td><td><a href="/membre/'.$url.'">'.$this->shortname($person).'</a></td></tr>';
-        }
-        else {
-          $table_line .= '<tr><td>'.$person['fonction'].'</td><td>'.$this->shortname($person).'</td></tr>';
-        }
+				}
+				else {
+					$table_line .= '<tr><td>'.$person['fonction'].'</td><td>'.$this->shortname($person).'</td></tr>';
+				}
 			}
 
 			$this->layout->custom_add('CUSTOM_TABLE', $table_line);
