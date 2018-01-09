@@ -2,182 +2,182 @@
 
 <div class="row">
 <form class="form-horizontal" role="form" method="post" action="/settings/save">
-	<div class="form-group">
-		<label for="surnom" class="col-sm-2 control-label">Surnom</label>
-		<div class="col-sm-10">
-			<input type="text" class="form-control" name="surnom" id="surnom" value="{{CUSTOM_SURNOM}}">
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="surnom" class="col-sm-2 control-label">Surnom</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="surnom" id="surnom" value="{{CUSTOM_SURNOM}}">
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="nomreel" class="col-sm-2 control-label">Nom réel</label>
-		<div class="col-sm-10">
-			<input type="text" class="form-control" name="nomreel" id="nomreel" value="{{CUSTOM_NOM_REEL}}">
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="nomreel" class="col-sm-2 control-label">Nom réel</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="nomreel" id="nomreel" value="{{CUSTOM_NOM_REEL}}">
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="sexe" class="col-sm-2 control-label">Sexe</label>
-		<div class="col-sm-10">
-			<select class="form-control" name="sexe" id="sexe">
-				<option value="M" {{CUSTOM_HOMME}}>Homme</option>
-				<option value="F" {{CUSTOM_FEMME}}>Femme</option>
-			</select>
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="sexe" class="col-sm-2 control-label">Sexe</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="sexe" id="sexe">
+                <option value="M" {{CUSTOM_HOMME}}>Homme</option>
+                <option value="F" {{CUSTOM_FEMME}}>Femme</option>
+            </select>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="actuellement" class="col-sm-2 control-label">Actuellement</label>
-		<div class="col-sm-10">
-			<input type="text" class="form-control" id="actuellement" name="actu" value="{{CUSTOM_ACTUELLEMENT}}">
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="actuellement" class="col-sm-2 control-label">Actuellement</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="actuellement" name="actu" value="{{CUSTOM_ACTUELLEMENT}}">
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="etoiles" class="col-sm-2 control-label">Etoiles</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="etoiles" name="etoiles" value="{{CUSTOM_ETOILES_PLAIN}}">
-		</div>
-		<div class="col-sm-2">
-			<p><button type="button" class="btn btn-info" data-toggle="modal" data-target="#legend">Voir la légende</button></p>
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="etoiles" class="col-sm-2 control-label">Etoiles</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="etoiles" name="etoiles" value="{{CUSTOM_ETOILES_PLAIN}}">
+        </div>
+        <div class="col-sm-2">
+            <p><button type="button" class="btn btn-info" data-toggle="modal" data-target="#legend">Voir la légende</button></p>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="bapteme" class="col-sm-2 control-label">Année de baptême</label>
-		<div class="col-sm-10">
-			<input type="numeric" class="form-control" id="bapteme" name="bapteme" value="{{CUSTOM_BAPTEME}}">
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="bapteme" class="col-sm-2 control-label">Année de baptême</label>
+        <div class="col-sm-10">
+            <input type="numeric" class="form-control" id="bapteme" name="bapteme" value="{{CUSTOM_BAPTEME}}">
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="titres" class="col-sm-2 control-label">Titres de guindailles</label>
-		<div class="col-sm-10">
-			<textarea class="form-control" id="titres" style="height: 200px;" name="titres">{{CUSTOM_TITRES_PLAIN}}</textarea>
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="titres" class="col-sm-2 control-label">Titres de guindailles</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="titres" style="height: 200px;" name="titres">{{CUSTOM_TITRES_PLAIN}}</textarea>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label for="etudes" class="col-sm-2 control-label">Parcours scolaire</label>
-		<div class="col-sm-10">
-			<textarea class="form-control" id="etudes" style="height: 200px;" name="etudes">{{CUSTOM_ETUDES_PLAIN}}</textarea>
-		</div>
-	</div>
+    <div class="form-group">
+        <label for="etudes" class="col-sm-2 control-label">Parcours scolaire</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="etudes" style="height: 200px;" name="etudes">{{CUSTOM_ETUDES_PLAIN}}</textarea>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
-			<button type="submit" class="btn btn-primary">Enregistrer</button>
-		</div>
-	</div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
 </form>
 </div>
 
 <div class="modal fade" id="legend">
-	<div class="modal-dialog">
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">
-				<span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span>
-			</button>
-			<h4 class="modal-title">Les étoiles</h4>
-		</div>
-		<div class="modal-body">
-			<table style="width: 100%; text-align: center; font-size: 150%;">
-				<thead>
-				<tr>
-					<td>Code</td>
-					<td>Etoile</td>
-					<td>Légende</td>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>*</td>
-					<td>
-						<div class="stars">
-						<span class="doree"></span>
-						</div>
-					</td>
-					<td>Etoile dorée</td>
-				</tr>
-				<tr>
-					<td>+</td>
-					<td>
-						<div class="stars">
-						<span class="argent"></span>
-						</div>
-					</td>
-					<td>Etoile argentée</td>
-				</tr>
-				<tr>
-					<td>r</td>
-					<td>
-						<div class="stars">
-						<span class="erasmus"></span>
-						</div>
-					</td>
-					<td>Erasmus</td>
-				</tr>
-				<tr>
-					<td>F</td>
-					<td>
-						<div class="stars">
-						<span class="fossile-doree"></span>
-						</div>
-					</td>
-					<td>Etoile dorée fossile</td>
-				</tr>
-				<tr>
-					<td>f</td>
-					<td>
-						<div class="stars">
-						<span class="fossile-argent"></span>
-						</div>
-					</td>
-					<td>Etoile argentée fossile</td>
-				</tr>
-				<tr>
-					<td>E</td>
-					<td>
-						<div class="stars">
-						<span class="fossile-erasmus"></span>
-						</div>
-					</td>
-					<td>Erasmus fossile</td>
-				</tr>
-				<tr>
-					<td>b</td>
-					<td>
-						<div class="stars">
-						<span class="bourgeois"></span>
-						</div>
-					</td>
-					<td>Etoile de bourgeois</td>
-				</tr>
-				<tr>
-					<td>/</td>
-					<td>
-						<div class="stars">
-						<span class="palme-doree"></span>
-						</div>
-					</td>
-					<td>Palme dorée</td>
-				</tr>
-				<tr>
-					<td>!</td>
-					<td>
-						<div class="stars">
-						<span class="palme-argent"></span>
-						</div>
-					</td>
-					<td>Palme argentée</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-		</div>
-	</div>
-	</div>
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span>
+            </button>
+            <h4 class="modal-title">Les étoiles</h4>
+        </div>
+        <div class="modal-body">
+            <table style="width: 100%; text-align: center; font-size: 150%;">
+                <thead>
+                <tr>
+                    <td>Code</td>
+                    <td>Etoile</td>
+                    <td>Légende</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>*</td>
+                    <td>
+                        <div class="stars">
+                        <span class="doree"></span>
+                        </div>
+                    </td>
+                    <td>Etoile dorée</td>
+                </tr>
+                <tr>
+                    <td>+</td>
+                    <td>
+                        <div class="stars">
+                        <span class="argent"></span>
+                        </div>
+                    </td>
+                    <td>Etoile argentée</td>
+                </tr>
+                <tr>
+                    <td>r</td>
+                    <td>
+                        <div class="stars">
+                        <span class="erasmus"></span>
+                        </div>
+                    </td>
+                    <td>Erasmus</td>
+                </tr>
+                <tr>
+                    <td>F</td>
+                    <td>
+                        <div class="stars">
+                        <span class="fossile-doree"></span>
+                        </div>
+                    </td>
+                    <td>Etoile dorée fossile</td>
+                </tr>
+                <tr>
+                    <td>f</td>
+                    <td>
+                        <div class="stars">
+                        <span class="fossile-argent"></span>
+                        </div>
+                    </td>
+                    <td>Etoile argentée fossile</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>
+                        <div class="stars">
+                        <span class="fossile-erasmus"></span>
+                        </div>
+                    </td>
+                    <td>Erasmus fossile</td>
+                </tr>
+                <tr>
+                    <td>b</td>
+                    <td>
+                        <div class="stars">
+                        <span class="bourgeois"></span>
+                        </div>
+                    </td>
+                    <td>Etoile de bourgeois</td>
+                </tr>
+                <tr>
+                    <td>/</td>
+                    <td>
+                        <div class="stars">
+                        <span class="palme-doree"></span>
+                        </div>
+                    </td>
+                    <td>Palme dorée</td>
+                </tr>
+                <tr>
+                    <td>!</td>
+                    <td>
+                        <div class="stars">
+                        <span class="palme-argent"></span>
+                        </div>
+                    </td>
+                    <td>Palme argentée</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        </div>
+    </div>
+    </div>
 </div>

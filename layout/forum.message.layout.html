@@ -1,38 +1,38 @@
 <div class="row message {{CUSTOM_STATUS}}" id="message-{{CUSTOM_ID}}">
-	<h3>{{CUSTOM_EXTRA_HEADER}}</h3>
+    <h3>{{CUSTOM_EXTRA_HEADER}}</h3>
 
-	<div class="col-sm-2 text-center">
-		<div class="hidden-xs">
-			<a class="forum" href="/membre/{{CUSTOM_AUTHOR_URL}}">
-				<img class="img-responsive" src="{{CUSTOM_PICTURE}}" alt=""><br />
-			</a>
+    <div class="col-sm-2 text-center">
+        <div class="hidden-xs">
+            <a class="forum" href="/membre/{{CUSTOM_AUTHOR_URL}}">
+                <img class="img-responsive" src="{{CUSTOM_PICTURE}}" alt=""><br />
+            </a>
 
-			<div>
-				Posté par <a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a><br />
-				{{CUSTOM_DATE}}
-			</div>
-		</div>
+            <div>
+                Posté par <a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a><br />
+                {{CUSTOM_DATE}}
+            </div>
+        </div>
 
-		<div class="visible-xs" style="margin-bottom: 15px;">
-			Posté par
-			<a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a>, le {{CUSTOM_DATE}}
-		</div>
+        <div class="visible-xs" style="margin-bottom: 15px;">
+            Posté par
+            <a class="forum" style="font-weight: bold;" href="/membre/{{CUSTOM_AUTHOR_URL}}">{{CUSTOM_AUTHOR}}</a>, le {{CUSTOM_DATE}}
+        </div>
 
-		<div>
-		{{CUSTOM_SEENBY}}
-		</div>
+        <div>
+        {{CUSTOM_SEENBY}}
+        </div>
 
-		<div>
-			{{CUSTOM_EDIT}} {{CUSTOM_HIDE}}
-			<a href="#" onclick="return quote({{CUSTOM_ID}});" title="citer">
-				<span class="glyphicon glyphicon-share"></span>
-			</a>
-		</div>
-	</div>
+        <div>
+            {{CUSTOM_EDIT}} {{CUSTOM_HIDE}}
+            <a href="#" onclick="return quote({{CUSTOM_ID}});" title="citer">
+                <span class="glyphicon glyphicon-share"></span>
+            </a>
+        </div>
+    </div>
 
-	<div class="col-sm-10 content-message">
-		{{CUSTOM_MESSAGE}}
-	</div>
+    <div class="col-sm-10 content-message">
+        {{CUSTOM_MESSAGE}}
+    </div>
 </div>
 
 <div class="raw-{{CUSTOM_ID}}" style="display: none;">{{CUSTOM_PLAIN_TEXT}}</div>
