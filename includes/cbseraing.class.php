@@ -1380,6 +1380,11 @@ class cbseraing {
                 $this->history();
             break;
 
+            case 'report':
+                $this->layout->set('header', 'Signaler un lien');
+                $this->layout->custom_add('REPORT_URL', $_POST['url']);
+                $this->layout->file('layout/report.layout.html');
+            break;
 
 
             default:
