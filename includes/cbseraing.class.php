@@ -552,6 +552,12 @@ class cbseraing {
             return $this->oldcomite();
 
         //
+        // easter egg: fake sql injection
+        //
+        if(is_string($type) && $type[0] == "'")
+            die("Bravo, tu as trouvé la faille d'injection SQL, j't'affone !");
+
+        //
         // grabbing users from their type
         //
         $req = $this->sql->prepare('
