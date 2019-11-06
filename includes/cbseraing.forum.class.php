@@ -247,6 +247,11 @@ class forum {
         $data = $this->root->sql->exec($req);
 
         foreach($data as $category) {
+            // skipping categories where 'comite' flags is required
+            // and user is not granted
+            if($category['comite'] == 1 && $this->root->user['comite'] == 0)
+                continue;
+
             $this->layout->custom_add('CUSTOM_ID', $category['id']);
             $this->layout->custom_add('CUSTOM_URL', $this->root->urlstrip($category['id'], $category['nom']));
             $this->layout->custom_add('CUSTOM_TITLE', $category['nom']);
@@ -290,6 +295,11 @@ class forum {
             return $this->denied();
 
         $acl = $acl[0];
+
+        // skipping categories where 'comite' flags is required
+        // and user is not granted
+        if($acl['comite'] == 1 && $this->root->user['comite'] == 0)
+            return $this->denied();
 
         //
         // breadcrumb
@@ -393,6 +403,11 @@ class forum {
             return $this->denied();
 
         $subject = $subject[0];
+
+        // skipping categories where 'comite' flags is required
+        // and user is not granted
+        if($subject['comite'] == 1 && $this->root->user['comite'] == 0)
+            return $this->denied();
 
         //
         // grab category name
