@@ -301,7 +301,7 @@ class forum {
         // skipping categories where 'comite' flags is required
         // and user is not granted
         if($this->root->connected()) {
-            if($acl['comite'] == 1 && $this->root->user['comite'] == 0)
+            if($acl['comite'] == 1 && $this->root->userdata($_SESSION['uid'])['comite'] == 0)
                 return $this->denied();
         }
 
@@ -411,7 +411,7 @@ class forum {
         // skipping categories where 'comite' flags is required
         // and user is not granted
         if($this->root->connected()) {
-            if($subject['comite'] == 1 && $this->root->user['comite'] == 0)
+            if($subject['comite'] == 1 && $this->root->userdata($_SESSION['uid'])['comite'] == 0)
                 return $this->denied();
         }
 
