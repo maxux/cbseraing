@@ -307,6 +307,8 @@ class gallery {
     // upload photos
     //
     function upload() {
+        set_time_limit(600);
+
         // html5 files array
         $files = $this->root->files('files');
 
