@@ -7,7 +7,7 @@ class sql {
 
     function __construct($server, $user, $password, $db) {
         $this->mysqli = new \mysqli($server, $user, $password, $db);
-        $this->mysqli->set_charset('utf8');
+        $this->mysqli->set_charset('utf8mb4');
     }
 
     function query($sql) {
