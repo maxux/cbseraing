@@ -352,7 +352,7 @@ class cbseraing {
     // return all 'fonction' of a user by year
     //
     function fonctions($id) {
-        $fonctions = NULL;
+        $fonctions = array();
 
         $query = "SELECT mf.year, CASE WHEN m.sexe = 'M' THEN GROUP_CONCAT(f.fonction SEPARATOR ', ') ELSE GROUP_CONCAT(f.feminin SEPARATOR ', ') END as fonction
             FROM cbs_member_fonction mf, cbs_fonctions f, cbs_membres m
