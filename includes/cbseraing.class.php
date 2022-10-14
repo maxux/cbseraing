@@ -230,7 +230,7 @@ class cbseraing {
 
         switch($requestlevel) {
             case 'albums':
-                $allowed = array(1, 2, 3, 4);
+                $allowed = array(1, 2, 3, 4, 50);
                 return in_array($this->user['type'], $allowed);
             break;
 
