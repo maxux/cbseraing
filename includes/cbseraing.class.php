@@ -37,7 +37,8 @@ class cbseraing {
 
     private $skiptypes = array(
         5 => true,
-        8 => true
+        8 => true,
+        50 => true,
     );
 
     function __construct($layout, $init = true) {
