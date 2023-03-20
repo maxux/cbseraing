@@ -206,6 +206,9 @@ class forum {
     //
     function denied() {
         $this->error("Ce que vous avez demandé n'existe pas (ou vous n'y avez pas accès)", true);
+
+        // hide leftover messages
+        $this->layout->custom_add('GOTONEWMESSAGE', '');
     }
 
     function noitem() {
