@@ -189,7 +189,7 @@ class forum {
             return;
 
         // connect to redis if not already done
-        if(!$self->redis) {
+        if(!$this->redis) {
             $this->redis = new \Redis();
             $this->redis->connect('127.0.0.1');
         }
