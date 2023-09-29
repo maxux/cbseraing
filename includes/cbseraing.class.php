@@ -951,6 +951,9 @@ class cbseraing {
     // check if file is an image
     //
     function image($filename) {
+        if($filename == "")
+            return false;
+
         $finfo = new \finfo(FILEINFO_MIME);
         return (substr($finfo->file($filename), 0, 10) == 'image/jpeg');
     }
