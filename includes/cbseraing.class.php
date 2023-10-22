@@ -125,6 +125,7 @@ class cbseraing {
         $_SESSION['name'] = ($user['surnom'] != '') ? $user['surnom'] : $user['nomreel'];
         $_SESSION['picture'] = $user['picture'];
         $_SESSION['longname'] = $this->username($user);
+        $_SESSION['email'] = $user['email'];
 
         $req = $this->sql->prepare('UPDATE cbs_membres SET dervis = NOW() WHERE id = ?');
         $req->bind_param('i', $user['id']);
@@ -197,6 +198,7 @@ class cbseraing {
         unset($_SESSION['name']);
         unset($_SESSION['picture']);
         unset($_SESSION['longname']);
+        unset($_SESSION['email']);
 
         // destroy persistance
         if(isset($_COOKIE['token'])) {
@@ -984,6 +986,15 @@ class cbseraing {
         //
         if(!$this->connected() && isset($_COOKIE['token']))
             $this->token($_COOKIE['token']);
+
+        // set username (email) in http header for custom logs
+        // this header should be hidden by webserver
+        if($this->connected()) {
+            // ensure email is set, backward compatible with already connected user
+            if(isset($_SESSION['email'])) {
+                header("X-Username: ".$_SESSION['email']);
+            }
+        }
 
         //
         // request a disconnection
