@@ -253,6 +253,17 @@ class cbseraing {
         }
     }
 
+    function isadmin($uid) {
+        $req = $this->sql->prepare('SELECT * FROM cbs_admins WHERE uid = ?');
+        $req->bind_param('i', $uid);
+        $data = $this->sql->exec($req);
+
+        if(count($data) == 0)
+            return false;
+
+        return true;
+    }
+
     function usertype() {
         if($this->connected()) {
             $user = $this->userdata($_SESSION['uid']);
