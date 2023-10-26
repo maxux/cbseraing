@@ -960,6 +960,34 @@ class cbseraing {
         $_SESSION['picture'] = $filename;
     }
 
+    function addnews() {
+        $when = $_POST['when'];
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+        $where = $_POST['where'];
+        $link = $_POST['facebook'];
+        $oripeaux = $_POST['oripeaux'];
+        $cover = NULL;
+
+        if(isset($_FILES['cover'])) {
+            $gallery = new gallery($this, $this->layout);
+            $hash = sha1(file_get_contents($_FILES['cover']['tmp_name']));
+
+            $cover = $hash.'.jpg';
+            $target = 'images/covers/'.$cover;
+            $gallery->optimize($_FILES['cover']['tmp_name'], $target);
+
+            var_dump($target);
+        }
+
+        $req = $this->sql->prepare('
+            INSERT INTO cbs_news (`when`, `name`, `description`, `where`, `link`, `oripeaux`, `cover`)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ');
+        $req->bind_param('sssssss', $when, $name, $description, $where, $link, $oripeaux, $cover);
+        $this->sql->exec($req);
+    }
+
     //
     // check if file is an image
     //
@@ -1215,6 +1243,24 @@ class cbseraing {
             case 'login':
                 $this->layout->set('header', 'Se connecter:');
                 $this->layout->file('layout/login.layout.html');
+            break;
+
+            case 'admin-news':
+                if($this->connected() && $this->isadmin($_SESSION['uid'])) {
+                    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        $this->addnews();
+                        header('Location: /history');
+                        exit(0);
+                    }
+
+                    $this->layout->set('header', 'Créer un évement:');
+                    $this->layout->file('layout/admin.news.layout.html');
+
+                } else {
+                    $this->layout->set('header', '');
+                    $this->layout->error_append("Vous n'avez pas accès à cette page.");
+                    $this->layout->file('layout/denied.layout.html');
+                }
             break;
 
             case 'folklore':

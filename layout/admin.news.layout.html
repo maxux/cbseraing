@@ -1,0 +1,47 @@
+<div class="row">
+    <h2>Nouvelle news</h2>
+
+    <form role="form" method="post" action="/index.php?page=admin-news" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Nom de l'évenement</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+
+        <div class="form-group">
+            <label for="where">Où</label>
+            <input type="text" class="form-control" id="where" name="where">
+        </div>
+
+        <div class="form-group">
+            <label for="when">Quand</label>
+            <input type="text" class="form-control" id="when" name="when" placeholder="Format: 2023-10-30 19:00:00">
+        </div>
+
+        <div class="form-group">
+            <label for="oripeaux">Oripeaux</label>
+            <select class="form-control" name="oripeaux" id="oripeaux">
+                <option value="Sans">Sans</option>
+                <option value="Complet">Complet</option>
+                <option value="Petit équipage">Petit équipage</option>
+                <option value="Propre">Propre</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="facebook">Lien Facebook</label>
+            <input type="text" class="form-control" id="facebook" name="facebook">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" style="height: 200px;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="cover">Cover</label>
+            <input type="file" name="cover" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer l'évenement</button>
+    </form>
+</div>
