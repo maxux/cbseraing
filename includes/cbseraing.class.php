@@ -75,7 +75,8 @@ class cbseraing {
     }
 
     function strip($url) {
-        $string = str_replace(array('?', '!', '#'), '', $url);
+        $string = str_replace(array('?', '!', '#', ',', '.'), '', $url);
+        $string = str_replace(array('---', '--'), '-', $string);
 
         $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ /\'';
         $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr---';
@@ -84,7 +85,8 @@ class cbseraing {
         $string = strtr($string, utf8_decode($a), $b);
         $string = strtolower($string);
 
-        return utf8_encode($string);
+        $string = utf8_encode($string);
+        return trim(preg_replace("![^a-z0-9]+!i", "-", $string), '-'); // remove leading and trailing dash
     }
 
     function urlstrip($id, $name) {
