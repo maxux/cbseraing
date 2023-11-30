@@ -77,8 +77,8 @@ class cbseraing {
     function strip($url) {
         $string = str_replace(array('?', '!', '#'), '', $url);
 
-        $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ /1234567890\'';
-        $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr--XXXXXXXXXX-';
+        $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ /\'';
+        $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr---';
 
         $string = utf8_decode($string);
         $string = strtr($string, utf8_decode($a), $b);
@@ -88,7 +88,7 @@ class cbseraing {
     }
 
     function urlstrip($id, $name) {
-        return $id.'-'.$this->strip($name);
+        return $id.'/'.$this->strip($name);
     }
 
     function urlslash($id, $name) {

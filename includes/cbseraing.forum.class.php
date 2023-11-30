@@ -635,7 +635,7 @@ class forum {
         for($i = 0; $i < $total / $this->ppp; $i++)
             $this->layout->pages_add(
                 $i + 1,
-                '/forum/subject/'.$subject['id'].'-'.($i + 1).'-'.$this->root->strip($subject['subject']),
+                '/forum/subject/'.$subject['id'].'/page/'.($i + 1).'/'.$this->root->strip($subject['subject']),
                 ($i + 1) == $page
             );
 
