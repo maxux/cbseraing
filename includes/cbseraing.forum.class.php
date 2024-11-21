@@ -10,6 +10,9 @@ class forum {
     // posts per page
     private $ppp = 15;
 
+    private $parsedown = null;
+    private $parsebb = null;
+
     private $parser = array(
         'nicks' => array(),
     );
@@ -29,6 +32,7 @@ class forum {
         $this->root = $root;
         $this->layout = $layout;
         $this->parsedown = new \Parsedown();
+        $this->parsebb = new \ChrisKonnertz\BBCode\BBCode();
 
         $this->layout->set('header', 'Le forum:');
         $this->type = $this->root->usertype();
@@ -677,31 +681,8 @@ class forum {
     // light bbcode support
     //
     function bbdecode($str) {
-        $str = str_replace(array('<', '>'), array('&lt', '&gt'), $str);
-        $str = preg_replace('#(\[b\])(.*?)(\[/b\])#is', '<strong>\2</strong>', $str);
-        $str = preg_replace('#(\[u\])(.*?)(\[/u\])#is', '<ins>\2</ins>', $str);
-        $str = preg_replace('#(\[i\])(.*?)(\[/i\])#is', '<em>\2</em>', $str);
-        $str = preg_replace('#(\[code\])(.*?)(\[/code\])#is', '<code>\2</code>', $str);
-        $str = preg_replace('#(\[img\])(.*?)(\[/img\])#is', '<img src="\2" class="img-responsive" />', $str);
-
-        $str = preg_replace('#(\[video\])(.*?)(\[/video\])#is',
-            '<video width="480" height="320" controls><source src="$2"></video>',
-            $str);
-
-        // neasted quote
-        do {
-            $str = preg_replace('#(\[cite\])(((?R)|.)*?)(\[/cite\])#is',
-                                '<blockquote>\2</blockquote>', $str, -1, $count);
-
-        } while($count);
-
-        // remove bbcode link and then auto-detect url
-        $str = preg_replace('#(\[a\])(.*?)(\[/a\])#is', '\2', $str);
-        $str = preg_replace('#(?<![\S"])(https?://\S+)#iS', '<a href="\1" target="_blank">\1</a>', $str);
-
-        $str = nl2br($str);
-
-        return $str;
+        $str = $this->parsebb->render($str);
+        return preg_replace('#(?<![\S"])(https?://\S+)#iS', '<a href="\1" target="_blank">\1</a>', $str);
     }
 
 
