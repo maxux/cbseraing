@@ -746,7 +746,8 @@ class cbseraing {
         }
 
         while(($event = $this->sql->fetch($req))) {
-            $when = strftime('%A %e %B %Y à %Hh%M', $event['udate']);
+            $fmt = datefmt_create('fr_BE', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', null, "'Le ' cccc d LLLL yyyy 'à' HH'h'mm");
+            $when = datefmt_format($fmt, $event['udate']);
 
             $this->layout->custom_add('CUSTOM_TITLE', $event['descri']);
             $this->layout->custom_add('CUSTOM_LOCATION', $event['lieu']);
@@ -791,9 +792,13 @@ class cbseraing {
             return $this->layout->error_append("Rien de prévu pour l'instant");
         }
 
+        $fmt = datefmt_create('fr_BE', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', null, "cccc d LLLL yyyy");
+
         foreach($events as $event) {
+            $when = ucfirst(datefmt_format($fmt, $event['event']['uts']));
+
             $this->layout->custom_add('CUSTOM_NAME', $event['event']['name']);
-            $this->layout->custom_add('CUSTOM_DATE', ucfirst(strftime('%A %d %B %G', $event['event']['uts'])));
+            $this->layout->custom_add('CUSTOM_DATE', $when);
             $this->layout->custom_add('CUSTOM_ID', $event['event']['id']);
 
             //
@@ -869,7 +874,9 @@ class cbseraing {
 
         // home-page
         $intro = ($news['utime'] < time()) ? 'Dernier évènement' : 'Prochain évènement';
-        $when = strftime('Le %A %e %B %Y à %Hh%M', $news['utime']);
+
+        $fmt = datefmt_create('fr_BE', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', null, "'Le ' cccc d LLLL yyyy 'à' HH'h'mm");
+        $when = datefmt_format($fmt, $news['utime']);
 
         $this->layout->custom_add('EVENT_ID', $news['id']);
         $this->layout->custom_add('EVENT_INTRO', $intro);
@@ -894,7 +901,8 @@ class cbseraing {
         $newslist = $this->news(20);
 
         foreach($newslist as $news) {
-            $when = strftime('Le %A %e %B %Y à %Hh%M', $news['utime']);
+            $fmt = datefmt_create('fr_BE', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', null, "'Le ' cccc d LLLL yyyy 'à' HH'h'mm");
+            $when = datefmt_format($fmt, $news['utime']);
 
             $this->layout->custom_add('EVENT_ID', $news['id']);
             $this->layout->custom_add('EVENT_NAME', $news['name']);
