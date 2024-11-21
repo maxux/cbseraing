@@ -321,9 +321,9 @@ class BBCode
                 break;
             case self::TAG_NAME_CODE:
                 if ($tag->opening) {
-                    $code = '<pre><code>';
+                    $code = '<code>';
                 } else {
-                    $code = '</code></pre>';
+                    $code = '</code>';
                 }
                 break;
             case self::TAG_NAME_EMAIL:
