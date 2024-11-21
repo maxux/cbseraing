@@ -25,6 +25,7 @@ class cbseraing {
     private $layout;
     public $sql;
     public $forum;
+    public $acl = array();
 
     private $menu_highlight = array();
     private $menu = array(
@@ -83,11 +84,12 @@ class cbseraing {
         $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ /\'';
         $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr---';
 
-        $string = utf8_decode($string);
-        $string = strtr($string, utf8_decode($a), $b);
+        // $string = utf8_decode($string);
+        // $string = strtr($string, utf8_decode($a), $b);
+        $string = strtr($string, $a, $b);
         $string = strtolower($string);
 
-        $string = utf8_encode($string);
+        // $string = utf8_encode($string);
         return trim(preg_replace("![^a-z0-9]+!i", "-", $string), '-'); // remove leading and trailing dash
     }
 
