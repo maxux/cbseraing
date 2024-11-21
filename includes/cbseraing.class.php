@@ -1193,6 +1193,9 @@ class cbseraing {
             if(!isset($_POST['subject']) || $_POST['subject'] == '')
                 return $this->layout->error_append("Erreur de sujet");
 
+            if(strlen($_POST['message']) > 65000)
+                return $this->layout->error_append("Arrête un peu de poster pour ne rien dire.");
+
             if(!isset($_POST['format']) || $_POST['format'] == '')
                 $_POST['format'] = 'bbcode';
 
